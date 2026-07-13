@@ -1,0 +1,23 @@
+[
+  {
+    "subject": "impl/zisk-zorch",
+    "profile": "zkvm-keccak",
+    "prove_s": 7.9,
+    "tput_khz": 680,
+    "proof_kb": 2000
+  },
+  {
+    "subject": "impl/sp1-zorch",
+    "profile": "zkvm-keccak",
+    "prove_s": 8.4,
+    "tput_khz": 620,
+    "proof_kb": 1300
+  },
+  {
+    "subject": "impl/openvm-zorch",
+    "profile": "zkvm-keccak",
+    "prove_s": 9.1,
+    "tput_khz": 540,
+    "proof_kb": 1100
+  }
+]

@@ -1,0 +1,20 @@
+id: pcs/whir
+name: WHIR
+category: PCS
+description: Multilinear, super-fast verifier; Reed–Solomon proximity.
+assumption: Hash
+post_quantum: true
+setup_type: Transparent
+field_requirement: FieldAgnostic
+polynomial_type: Multilinear
+homomorphic: false
+hiding: None
+binding: Computational
+prover_complexity: O(n log n)
+verifier_complexity: O(log n)
+proof_size_class: O(log^2 n)
+needs:
+  - Hash
+paper_links:
+  - https://eprint.iacr.org/2024/1586
+github_stars: 210

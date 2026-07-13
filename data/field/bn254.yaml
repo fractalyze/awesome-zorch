@@ -1,0 +1,7 @@
+id: field/bn254
+name: BN254
+category: Field
+kind: Prime
+description: 254-bit pairing-friendly prime.
+bits: 254
+smooth: true

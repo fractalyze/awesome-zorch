@@ -1,0 +1,36 @@
+name: Add a scheme / primitive
+description: Propose an abstract primitive (Hash, PCS, Argument, Folding, Primitive) for the catalog.
+title: "[scheme] <name>"
+labels: ["entry", "scheme"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Abstract primitives are **field-agnostic** — do not pin a field here. Prefer a PR with the
+        data file (see CONTRIBUTING.md); use this form to let a maintainer create it.
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options: [Hash, PCS, Argument, Folding, Primitive]
+    validations: { required: true }
+  - type: input
+    id: name
+    attributes: { label: Name, placeholder: WHIR }
+    validations: { required: true }
+  - type: textarea
+    id: description
+    attributes: { label: One-line description }
+    validations: { required: true }
+  - type: input
+    id: paper
+    attributes: { label: Paper link, placeholder: https://eprint.iacr.org/... }
+  - type: textarea
+    id: properties
+    attributes:
+      label: Defining properties
+      description: >-
+        PCS → assumption, setup (Transparent/UniversalTrusted), polynomial type, field requirement,
+        complexities. Hash → algebraic vs bit-oriented, construction. Argument → relation + technique.
+        Primitive → is it benchmarkable yet, and optimizations if any.
+    validations: { required: true }

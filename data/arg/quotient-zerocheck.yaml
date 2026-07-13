@@ -1,0 +1,9 @@
+id: arg/quotient-zerocheck
+name: Quotient ZeroCheck
+category: Argument
+description: Constraint satisfaction via a vanishing-polynomial quotient (STARK-style).
+relation: ZeroCheck
+technique: Quotient-based
+needs:
+  - PCS
+github_stars: 110

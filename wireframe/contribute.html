@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contribute · awesome-zorch</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="contribute">
+  <main>
+    <section class="block wrap">
+      <div class="section-head"><h2>Contribute an entry</h2></div>
+      <p class="muted" style="max-width:680px">The catalog is a <b>data-only GitHub repo</b>.
+        You add a scheme or implementation by opening a PR with one metadata file — no site code.
+        Benchmarks run on a hidden test set we host, so you submit the <i>implementation</i>, never the numbers.</p>
+
+      <div class="steps" style="margin:18px 0 26px">
+        <div class="step"><div class="n">1</div><b>Fork the data repo</b>
+          <p class="muted small">One file per entry, keyed by a stable id like <code>impl/my-zorch</code>.</p></div>
+        <div class="step"><div class="n">2</div><b>Fill the schema</b>
+          <p class="muted small">Pick a category and fill its fields. Abstract primitives stay
+            field-agnostic; implementations fill every slot. See <a href="../schema.md">schema.md</a>.</p></div>
+        <div class="step"><div class="n">3</div><b>Open a PR</b>
+          <p class="muted small">CI validates the file against the schema and resolves your
+            <code>uses</code> slots to existing entries.</p></div>
+        <div class="step"><div class="n">4</div><b>We benchmark &amp; merge</b>
+          <p class="muted small">On merge, your entry runs against the hidden profile set and lands
+            on the <a href="leaderboard.html">leaderboard</a>.</p></div>
+      </div>
+
+      <div class="browse" style="grid-template-columns:1fr 300px">
+        <div>
+          <h3>Sample implementation entry</h3>
+          <pre class="codeblock">{
+  "id": "impl/my-zorch",
+  "category": "Implementation",
+  "kind": "Zkvm",
+  "name": "my-zorch",
+  "description": "GPU-accelerated port of My-zkVM on the Zorch stack.",
+  "ref": { "repo": "https://github.com/me/my-zkvm", "version": "1.0.0" },
+
+  "field": "field/babybear",
+  "hash":  "hash/poseidon2",
+  "pcs":   "pcs/whir",
+  "arithmetization": "arith/air",
+  "arguments": ["arg/sumcheck-zerocheck", "arg/logup-gkr"],
+  "trace_layout": "Jagged",
+
+  "parameters": { "security_bits": 128 },
+  "license": "Apache-2.0",
+  "languages": ["Rust", "Python"]
+}</pre>
+          <p class="small muted">Slots (<code>field</code>, <code>hash</code>, <code>pcs</code>, …) reference
+            existing scheme ids. Missing a primitive? Add it as its own PR first.</p>
+        </div>
+        <aside>
+          <div class="callout"><b>Stays private (server-side).</b>
+            <ul style="margin:8px 0 0 16px;padding:0">
+              <li><code>TestInput</code> — ELFs / hash vectors (DDoS &amp; large-payload risk)</li>
+              <li><code>SRS</code> — one canonical ceremony, referenced by hash</li>
+              <li>the hidden benchmark vectors</li>
+            </ul>
+            <p class="small" style="margin:10px 0 0">You never submit these — that's what keeps the
+              leaderboard fair and the service safe.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

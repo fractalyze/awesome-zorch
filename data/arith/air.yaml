@@ -1,0 +1,4 @@
+id: arith/air
+name: AIR
+category: Arithmetization
+description: Algebraic Intermediate Representation — an execution trace plus transition constraints.

@@ -1,0 +1,7 @@
+id: field/pasta
+name: Pasta (Pallas/Vesta)
+category: Field
+kind: Prime
+description: ~255-bit amicable curve cycle.
+bits: 255
+smooth: true

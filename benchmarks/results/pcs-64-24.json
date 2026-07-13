@@ -1,0 +1,34 @@
+[
+  {
+    "subject": "pcs/whir",
+    "profile": "pcs-64-24",
+    "prove_ms": 3800,
+    "verify_ms": 4.2,
+    "proof_kb": 120,
+    "mem_mb": 5200
+  },
+  {
+    "subject": "pcs/basefold",
+    "profile": "pcs-64-24",
+    "prove_ms": 4200,
+    "verify_ms": 12,
+    "proof_kb": 180,
+    "mem_mb": 5600
+  },
+  {
+    "subject": "pcs/fri",
+    "profile": "pcs-64-24",
+    "prove_ms": 4600,
+    "verify_ms": 25,
+    "proof_kb": 340,
+    "mem_mb": 6000
+  },
+  {
+    "subject": "pcs/ligero",
+    "profile": "pcs-64-24",
+    "prove_ms": 5200,
+    "verify_ms": 60,
+    "proof_kb": 1200,
+    "mem_mb": 6400
+  }
+]

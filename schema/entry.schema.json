@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://awesome-zorch.dev/schema/entry.schema.json",
+  "title": "awesome-zorch catalog entry",
+  "type": "object",
+  "required": ["id", "name", "category", "description"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^(hash|pcs|arg|fold|prim|impl|field|arith)/[a-z0-9][a-z0-9-]*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "category": { "enum": ["Hash", "PCS", "Argument", "Folding", "Primitive", "Implementation", "Field", "Arithmetization"] },
+    "description": { "type": "string", "minLength": 1 },
+    "repo": { "type": "string" },
+    "version": { "type": "string" },
+    "homepage": { "type": "string" },
+    "docs": { "type": "string" },
+    "paper_links": { "type": "array", "items": { "type": "string" } },
+    "authors": { "type": "array", "items": { "type": "string" } },
+    "languages": { "type": "array", "items": { "type": "string" } },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "license": { "type": "string" },
+    "github_stars": { "type": "integer", "minimum": 0 },
+    "created_at": { "type": "string" },
+    "updated_at": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "category": { "const": "PCS" } } },
+      "then": {
+        "required": ["assumption", "setup_type", "polynomial_type", "field_requirement"],
+        "properties": {
+          "assumption": { "enum": ["Hash", "DiscreteLog", "Pairing", "UnknownOrderGroup", "Lattice"] },
+          "post_quantum": { "type": "boolean" },
+          "setup_type": { "enum": ["Transparent", "UniversalTrusted"] },
+          "field_requirement": { "enum": ["FieldAgnostic", "PairingCurve", "PrimeOrderGroup", "Lattice"] },
+          "polynomial_type": { "enum": ["Univariate", "Multilinear"] },
+          "homomorphic": { "type": "boolean" },
+          "hiding": { "enum": ["None", "Computational", "Perfect"] },
+          "binding": { "enum": ["Computational", "Perfect"] },
+          "prover_complexity": { "type": "string" },
+          "verifier_complexity": { "type": "string" },
+          "proof_size_class": { "type": "string" },
+          "setup_note": { "type": "string" },
+          "needs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "category": { "const": "Hash" } } },
+      "then": {
+        "required": ["construction", "field_requirement"],
+        "properties": {
+          "arithmetization_friendly": { "type": "boolean" },
+          "construction": { "type": "string" },
+          "field_requirement": { "enum": ["FieldAgnostic", "PairingCurve", "PrimeOrderGroup", "Lattice"] }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "category": { "const": "Argument" } } },
+      "then": {
+        "required": ["relation", "technique"],
+        "properties": {
+          "relation": { "enum": ["ZeroCheck", "Lookup", "Permutation"] },
+          "technique": { "type": "string" },
+          "needs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "category": { "const": "Folding" } } },
+      "then": {
+        "properties": {
+          "needs": { "type": "array", "items": { "type": "string" } },
+          "decider": { "type": "string" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "category": { "const": "Primitive" } } },
+      "then": {
+        "required": ["benchmarkable"],
+        "properties": {
+          "benchmarkable": { "type": "boolean" },
+          "status": { "enum": ["live", "coming-soon"] },
+          "gate": { "type": "string" },
+          "optimizations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": { "name": { "type": "string" }, "note": { "type": "string" }, "paper": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "category": { "const": "Field" } } },
+      "then": {
+        "required": ["bits", "kind"],
+        "properties": {
+          "bits": { "type": "integer", "minimum": 1 },
+          "kind": { "enum": ["Prime", "Extension", "BinaryExt"] },
+          "smooth": { "type": "boolean" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "category": { "const": "Implementation" } } },
+      "then": {
+        "required": ["kind", "ref", "field", "parameters"],
+        "properties": {
+          "kind": { "enum": ["Zkvm", "Snark", "Accumulation"] },
+          "ref": {
+            "type": "object",
+            "required": ["repo", "version"],
+            "properties": { "repo": { "type": "string" }, "version": { "type": "string" }, "commit": { "type": "string" } }
+          },
+          "pypi": {
+            "type": "object",
+            "required": ["name"],
+            "properties": { "name": { "type": "string" }, "version": { "type": "string" } }
+          },
+          "field": { "type": "string" },
+          "hash": { "type": "string" },
+          "pcs": { "type": "string" },
+          "arithmetization": { "type": "string" },
+          "arguments": { "type": "array", "items": { "type": "string" } },
+          "folding": { "type": "string" },
+          "decider": { "type": "string" },
+          "trace_layout": { "enum": ["Dense", "Jagged"] },
+          "trusted_setup": { "type": "string" },
+          "setup_note": { "type": "string" },
+          "parameters": {
+            "type": "object",
+            "required": ["security_bits"],
+            "properties": { "security_bits": { "type": "integer" }, "extra": { "type": "object" } }
+          }
+        }
+      }
+    }
+  ]
+}

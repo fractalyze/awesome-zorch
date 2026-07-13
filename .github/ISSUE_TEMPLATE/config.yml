@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: How to contribute (PR guide)
+    url: https://github.com/fractalyze/awesome-zorch/blob/main/CONTRIBUTING.md
+    about: Prefer opening a PR with the data file directly — this is the fastest path.
+  - name: Data schema
+    url: https://github.com/fractalyze/awesome-zorch/blob/main/schema.md
+    about: The full data model and field reference.

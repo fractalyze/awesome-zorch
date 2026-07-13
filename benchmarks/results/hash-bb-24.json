@@ -1,0 +1,20 @@
+[
+  {
+    "subject": "hash/keccak",
+    "profile": "hash-bb-24",
+    "time_ms": 140,
+    "tput_mhz": 120
+  },
+  {
+    "subject": "hash/poseidon2",
+    "profile": "hash-bb-24",
+    "time_ms": 210,
+    "tput_mhz": 80
+  },
+  {
+    "subject": "hash/monolith",
+    "profile": "hash-bb-24",
+    "time_ms": 260,
+    "tput_mhz": 64
+  }
+]

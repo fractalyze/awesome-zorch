@@ -1,0 +1,8 @@
+id: hash/blake3
+name: Blake3
+category: Hash
+description: Bit-oriented tree hash.
+field_requirement: FieldAgnostic
+arithmetization_friendly: false
+construction: Compression
+github_stars: 170

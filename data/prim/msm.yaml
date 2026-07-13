@@ -1,0 +1,10 @@
+id: prim/msm
+name: MSM
+category: Primitive
+description: Multi-scalar multiplication — the bottleneck of curve-based provers.
+status: coming-soon
+gate: >-
+  Needs an XLA MSM opcode + codegen on the Zorch stack. Open for curve backends (e.g. Pasta) once
+  codegen lands.
+benchmarkable: false
+github_stars: 120

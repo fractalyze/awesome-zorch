@@ -1,0 +1,15 @@
+id: hash-bb-24
+board: Hash
+field_class: BabyBear
+degree: 2^24 leaves
+device: 1× RTX 5090
+columns:
+  - key: time_ms
+    label: Build
+    unit: ms
+    lower: true
+    primary: true
+  - key: tput_mhz
+    label: Throughput
+    unit: MH/s
+    lower: false

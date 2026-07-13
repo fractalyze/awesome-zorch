@@ -1,0 +1,7 @@
+id: fold/protostar
+name: ProtoStar
+category: Folding
+description: Generic folding for high-degree gates + lookups.
+needs:
+  - PCS
+github_stars: 120

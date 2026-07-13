@@ -1,0 +1,25 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Validate data against schema + reference integrity
+        run: npm run validate
+      - name: Build site backdata (dist/data.json)
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: data-json
+          path: dist/data.json

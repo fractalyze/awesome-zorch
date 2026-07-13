@@ -1,0 +1,19 @@
+[
+  {
+    "subject": "pcs/kzg",
+    "profile": "pcs-bn254-24",
+    "prove_ms": 9800,
+    "verify_ms": 1.2,
+    "proof_kb": 0.05,
+    "mem_mb": 8000,
+    "key_mb": 805
+  },
+  {
+    "subject": "pcs/ipa",
+    "profile": "pcs-bn254-24",
+    "prove_ms": 8200,
+    "verify_ms": 900,
+    "proof_kb": 1.6,
+    "mem_mb": 7000
+  }
+]

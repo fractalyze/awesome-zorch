@@ -1,0 +1,4 @@
+id: arith/r1cs
+name: R1CS
+category: Arithmetization
+description: Rank-1 constraint system — each constraint is a product a·b = c.

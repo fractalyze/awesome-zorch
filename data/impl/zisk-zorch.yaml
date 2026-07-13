@@ -1,0 +1,27 @@
+id: impl/zisk-zorch
+name: zisk-zorch
+category: Implementation
+kind: Zkvm
+description: GPU-accelerated Zisk (Goldilocks STARK) on the Zorch stack.
+ref:
+  repo: https://github.com/0xPolygonHermez/zisk
+  version: 0.9.0
+pypi:
+  name: zisk-zorch
+  version: 0.1.5
+field: field/goldilocks
+hash: hash/poseidon2
+pcs: pcs/fri
+arithmetization: arith/air
+arguments:
+  - arg/quotient-zerocheck
+  - arg/logup-gkr
+trace_layout: Dense
+parameters:
+  security_bits: 128
+languages:
+  - Rust
+  - Python
+license: Apache-2.0
+github_stars: 90
+updated_at: '2026-07-06'

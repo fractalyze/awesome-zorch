@@ -1,0 +1,18 @@
+id: prim/sumcheck
+name: Sumcheck
+category: Primitive
+description: >-
+  The core interactive protocol for proving a multivariate sum. Optimizations compete on the
+  Sumcheck board.
+benchmarkable: true
+optimizations:
+  - name: Univariate Skip
+    note: Skip early univariate rounds.
+    paper: https://eprint.iacr.org/2024/108
+  - name: Small-Value Opt (SVO)
+    note: Exploit small witness values to cut field ops.
+  - name: Eval-domain switch
+    note: Evaluate on a cheaper domain per round.
+paper_links:
+  - https://dl.acm.org/doi/10.1145/146585.146605
+github_stars: 190

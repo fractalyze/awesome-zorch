@@ -1,0 +1,36 @@
+# Leaderboard boards. `active: false` boards render as "coming soon" with the gate note.
+- id: PCS
+  label: PCS
+  active: true
+  methodology: >-
+    Commit to a random polynomial of the given degree, then open at one point. Prover + verifier
+    time, proof size, peak memory, and (for trusted-setup schemes) setup-key size, at 128-bit
+    security on the stated device.
+- id: Hash
+  label: Hash
+  active: true
+  methodology: >-
+    Build a 2-to-1 Merkle tree over the given number of field-element leaves. Wall-clock build
+    time and hash throughput on the stated device.
+- id: Zkvm
+  label: zkVM
+  active: true
+  methodology: >-
+    Prove a fixed guest program (Keccak-256 x100) end to end. Prove time, cycle throughput, and
+    proof size at 128-bit security on the stated device.
+- id: Sumcheck
+  label: Sumcheck
+  active: true
+  methodology: >-
+    Run a sumcheck over a multilinear of the given size; each row is an optimization variant.
+    Prover time on the stated device (128-bit).
+- id: MSM
+  label: MSM
+  active: false
+  gate: >-
+    Gated on an XLA MSM opcode + codegen on the Zorch stack. Coming soon (curve backends like
+    Pasta first).
+- id: FFT
+  label: FFT / NTT
+  active: false
+  gate: Gated on an XLA FFT/NTT opcode + codegen on the Zorch stack. Coming soon.

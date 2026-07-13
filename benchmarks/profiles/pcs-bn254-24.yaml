@@ -1,0 +1,27 @@
+id: pcs-bn254-24
+board: PCS
+field_class: BN254
+degree: 2^24
+device: 1× RTX 5090
+columns:
+  - key: prove_ms
+    label: Prove
+    unit: ms
+    lower: true
+    primary: true
+  - key: verify_ms
+    label: Verify
+    unit: ms
+    lower: true
+  - key: proof_kb
+    label: Proof
+    unit: KB
+    lower: true
+  - key: mem_mb
+    label: Peak mem
+    unit: MB
+    lower: true
+  - key: key_mb
+    label: Setup key
+    unit: MB
+    lower: true
