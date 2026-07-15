@@ -1,7 +1,0 @@
-id: field/m31
-name: Mersenne31
-category: Field
-kind: Prime
-description: 31-bit Mersenne prime.
-bits: 31
-smooth: false

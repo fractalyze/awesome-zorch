@@ -1,9 +1,0 @@
-id: arg/sumcheck-zerocheck
-name: Sumcheck ZeroCheck
-category: Argument
-description: Constraint satisfaction via sumcheck over the boolean hypercube.
-relation: ZeroCheck
-technique: Sumcheck-based
-needs:
-  - PCS
-github_stars: 130

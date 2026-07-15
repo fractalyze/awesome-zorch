@@ -1,8 +1,0 @@
-id: prim/fft
-name: FFT / NTT
-category: Primitive
-description: Number-theoretic transform — the bottleneck of hash/FRI-based provers.
-status: coming-soon
-gate: Needs an XLA FFT/NTT opcode + codegen on the Zorch stack. Open once codegen lands.
-benchmarkable: false
-github_stars: 110

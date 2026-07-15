@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "zorch library entry",
+  "description": "One YAML per zorch library (entry unit = repo). See design.md §3.",
+  "type": "object",
+  "required": ["id", "name", "type", "tagline", "repo"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string" },
+    "type": { "enum": ["core", "zkvm", "snark", "pcs"] },
+    "tagline": { "type": "string", "maxLength": 300 },
+    "repo": { "type": "string", "pattern": "^https://" },
+    "upstream": {
+      "description": "The project this library ports (omit for type: core).",
+      "type": "object",
+      "required": ["name", "repo"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "repo": { "type": "string", "pattern": "^https://" }
+      }
+    },
+    "pypi": { "type": "string", "description": "PyPI package name" },
+    "schemes": {
+      "type": "array",
+      "description": "End-to-end proving schemes (protocols) this library implements — e.g. groth16, flock, sp1-hypercube. NOT primitives: PCS/hash building blocks go in their own fields. Lowercase kebab-case.",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+    },
+    "quickstart": {
+      "type": "string",
+      "description": "Minimal runnable Python snippet shown in the detail page's 'Use this library' panel — keep it to what actually works"
+    },
+    "field": { "enum": ["babybear", "koalabear", "goldilocks", "m31", "bn254", "gf2^128", "pasta"] },
+    "hash": { "enum": ["poseidon2", "keccak", "blake3", "sha256", "monolith"] },
+    "arithmetization": { "enum": ["air", "r1cs", "plonkish", "ccs"] },
+    "pcs": {
+      "type": "array",
+      "items": { "enum": ["whir", "fri", "basefold", "ligero", "ligerito", "kzg", "ipa", "hyperkzg"] }
+    },
+    "papers": { "type": "array", "items": { "type": "string", "pattern": "^https://" } },
+    "license": { "type": "string" }
+  }
+}

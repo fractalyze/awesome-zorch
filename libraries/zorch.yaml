@@ -1,0 +1,10 @@
+id: zorch
+name: zorch
+type: core
+tagline: >-
+  JAX-native building blocks for Modern SNARKs (IOP + PCS).
+  Proving-scheme- and zkVM-agnostic, fusion-first.
+repo: https://github.com/fractalyze/zorch
+pypi: zorch   # TODO(team): confirm published package name
+# TODO(team): declare what the core ships (pcs/hash vocab) and a runnable
+# quickstart snippet. See design.md §8.

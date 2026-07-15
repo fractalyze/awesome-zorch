@@ -1,0 +1,15 @@
+id: sp1-zorch
+name: sp1-zorch
+type: zkvm
+tagline: >-
+  Lean SP1 prover on zorch blocks: SP1-specific commitment and prove glue
+  (SMCS, shard prover, FFI) over fractalyze/zorch.
+repo: https://github.com/fractalyze/sp1-zorch
+upstream:
+  name: SP1
+  repo: https://github.com/succinctlabs/sp1
+pypi: sp1-zorch   # TODO(team): confirm published package name
+schemes: [sp1-hypercube]
+field: koalabear
+hash: poseidon2
+arithmetization: air
