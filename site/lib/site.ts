@@ -9,7 +9,7 @@ export const SITE = {
   org: "fractalyze",
   coreRepo: "https://github.com/fractalyze/zorch",
   dataRepo: "https://github.com/fractalyze/awesome-zorch",
-  playground: "https://playground.fractalyze.ai",
+  playground: "https://playground.fractalyze.io",
 } as const;
 
 /**
