@@ -1,5 +1,5 @@
 # Maintainer-only. Measurement conditions to be confirmed before launch (design.md §8).
-library: groth16-zorch
+library: bellman-zorch
 stats:
   - label: Groth16 prove
     value: 2.2

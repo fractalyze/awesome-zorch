@@ -1,0 +1,15 @@
+id: bellman-zorch
+name: bellman-zorch
+type: snark
+tagline: >-
+  GPU Groth16 prover for bellman (BN254). The h-FFT and all five MSMs in one
+  fused GPU call, byte-identical to groth16::create_proof.
+repo: https://github.com/fractalyze/bellman-zorch
+upstream:
+  name: bellman
+  repo: https://github.com/zkcrypto/bellman
+# TODO(team): not on PyPI yet (checked 2026-07-15) — restore `pypi:` on release.
+# pypi: bellman-zorch
+schemes: [groth16]
+field: bn254
+arithmetization: r1cs
