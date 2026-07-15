@@ -16,9 +16,10 @@ export const SITE = {
  * Playground pre-loaded with a library's runnable `quickstart` via the `#code`
  * deep link. The snippet rides in the URL *fragment* — never sent to any server
  * or logged — and is URL-encoded so the playground recovers it verbatim with
- * `URLSearchParams` (generate and parse are symmetric); `run=1` auto-runs it on
- * arrival, which is what the visitor asked for by clicking "Run". Falls back to
- * the bare playground when a library has no quickstart yet.
+ * `URLSearchParams` (generate and parse are symmetric). We deliberately do NOT
+ * pass `run=1`: the playground opens with the code loaded, and the visitor
+ * clicks Run there — so browsing cards doesn't fire a GPU job per click. Falls
+ * back to the bare playground when a library has no quickstart yet.
  *
  * This replaces the old `?template=<id>` convention, which required the
  * playground team to hand-wire a template per library — the code is now the
@@ -27,7 +28,7 @@ export const SITE = {
  */
 export function playgroundUrl(lib?: { id: string; quickstart?: string }): string {
   if (!lib?.quickstart) return SITE.playground;
-  const frag = new URLSearchParams({ code: lib.quickstart, title: lib.id, run: "1" });
+  const frag = new URLSearchParams({ code: lib.quickstart, title: lib.id });
   return `${SITE.playground}/#${frag.toString()}`;
 }
 

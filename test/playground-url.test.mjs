@@ -32,7 +32,7 @@ test("quickstart round-trips through the fragment verbatim", () => {
   const p = decodeFragment(url);
   assert.equal(p.get("code"), quickstart); // byte-for-byte
   assert.equal(p.get("title"), "demo-lib");
-  assert.equal(p.get("run"), "1");
+  assert.equal(p.get("run"), null); // no auto-run: the visitor clicks Run in the playground
 });
 
 test("every shipped snippet round-trips", () => {
