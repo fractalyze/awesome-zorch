@@ -5,7 +5,10 @@ tagline: >-
   JAX-native building blocks for Modern SNARKs (IOP + PCS).
   Proving-scheme- and zkVM-agnostic, fusion-first.
 repo: https://github.com/fractalyze/zorch
-pypi: zorch   # TODO(team): confirm published package name
+# TODO(team): PyPI name "zorch" is taken by an unrelated package (checked
+# 2026-07-15) — pick a different package name (or claim via PEP 541), then
+# restore `pypi:`. The site hides the pip-install button while this is unset.
+# pypi: zorch
 # TODO(team): declare what the core ships (pcs/hash vocab). See design.md §8.
 # quickstart is the playground's verified sumcheck demo (runs as-is on the GPU).
 quickstart: |
