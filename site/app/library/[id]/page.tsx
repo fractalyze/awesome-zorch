@@ -61,7 +61,7 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
         </div>
         <p className="mt-3 max-w-3xl leading-relaxed text-mute">{lib.tagline}</p>
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <a href={playgroundUrl(lib.id)} className={btnPrimary}>
+          <a href={playgroundUrl(lib)} className={btnPrimary}>
             Run in Playground ↗
           </a>
           {lib.pypi && <CopyButton text={`pip install ${lib.pypi}`} />}
