@@ -8,7 +8,6 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { load } from "js-yaml";
 
 import { playgroundUrl, SITE } from "../site/lib/site.ts";
 
@@ -36,16 +35,14 @@ test("quickstart round-trips through the fragment verbatim", () => {
   assert.equal(p.get("run"), "1");
 });
 
-test("every shipped library quickstart round-trips", () => {
-  const dir = path.join(REPO_ROOT, "libraries");
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".yaml"));
-  let checked = 0;
+test("every shipped snippet round-trips", () => {
+  const dir = path.join(REPO_ROOT, "snippets");
+  const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".py")) : [];
   for (const f of files) {
-    const lib = load(fs.readFileSync(path.join(dir, f), "utf8"));
-    if (!lib?.quickstart) continue;
-    const got = decodeFragment(playgroundUrl(lib)).get("code");
-    assert.equal(got, lib.quickstart, `quickstart mismatch for ${f}`);
-    checked++;
+    const quickstart = fs.readFileSync(path.join(dir, f), "utf8");
+    const name = f.replace(/\.py$/, "");
+    const got = decodeFragment(playgroundUrl({ id: name, quickstart })).get("code");
+    assert.equal(got, quickstart, `round-trip mismatch for snippets/${f}`);
   }
-  assert.ok(checked >= 1, "expected at least one library with a quickstart");
+  assert.ok(files.length >= 1, "expected at least one snippet");
 });

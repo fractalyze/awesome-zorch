@@ -24,9 +24,6 @@ field: koalabear          # optional, controlled vocabulary
 hash: poseidon2           # optional, controlled vocabulary
 pcs: [basefold]           # optional, controlled vocabulary
 arithmetization: air      # optional: air | r1cs | plonkish | ccs
-quickstart: |             # optional: minimal runnable snippet for the detail page
-  import my_zorch
-  proof = my_zorch.prove(input)
 papers:                   # optional
   - https://eprint.iacr.org/...
 license: Apache-2.0       # optional
@@ -37,6 +34,13 @@ Then validate locally and open the PR:
 ```bash
 npm install && npm run validate
 ```
+
+## Runnable snippet (the Run button)
+
+The "Run in Playground" button loads a library's snippet from `snippets/<name>.py`
+(matching the library's `name`). Drop the file in — it's picked up automatically,
+no YAML field. Keep it to what actually runs on the playground; a library with no
+`snippets/<name>.py` just links to the bare playground.
 
 ## Schemes vs. primitives
 
