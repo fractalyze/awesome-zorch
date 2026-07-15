@@ -36,9 +36,12 @@ maintainers on pinned hardware against upstream, never self-reported.
 
 ### SNARK provers
 
-- [groth16-zorch](https://github.com/fractalyze/bellman-zorch) - GPU Groth16
+- [bellman-zorch](https://github.com/fractalyze/bellman-zorch) - GPU Groth16
   prover for bellman (BN254), byte-identical to groth16::create_proof.
   2.2x vs Gnark's Groth16 GPU prover.
+- [groth16-zorch](https://github.com/fractalyze/groth16-zorch) - Groth16
+  prover in Python using zorch, the Python counterpart of RabbitSNARK.
+  Input/output compatible with the circom/snarkjs ecosystem.
 - [flock-zorch](https://github.com/fractalyze/flock-zorch) - GPU port of
   Flock: R1CS-over-GF(2^128) PIOP with BaseFold/Ligerito PCS. First working
   GPU implementation.

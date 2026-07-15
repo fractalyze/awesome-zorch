@@ -204,14 +204,13 @@ the static site generator (§5–6) and the Pages deploy workflow.
 
 ## 8. Open items (owner: team)
 
-- [ ] Repos public by launch: zorch, sp1-zorch, groth16-zorch (bellman rename), flock-zorch
-- [ ] bellman-zorch → groth16-zorch rename **blocked by a name collision**
-      (found 2026-07-15): a separate repo `fractalyze/groth16-zorch` now exists
-      (Python Groth16 prover using Zorch, the RabbitSNARK counterpart) — it is a
-      different project from bellman-zorch (GPU prover for Rust bellman). Team
-      must decide: (a) catalog entry reverts to id `bellman-zorch` and the new
-      repo gets its own entry, (b) different rename target, or (c) merge. The
-      redirect assumption in `libraries/groth16-zorch.yaml` no longer holds.
+- [ ] Repos public by launch: zorch, sp1-zorch, bellman-zorch, groth16-zorch, flock-zorch
+- [x] bellman-zorch → groth16-zorch rename **dropped** (team, 2026-07-15):
+      `fractalyze/groth16-zorch` is a separate project (Python Groth16 prover
+      using zorch, the RabbitSNARK counterpart) that exists alongside
+      bellman-zorch (GPU prover for Rust bellman). The catalog keeps both:
+      entry id reverted to `bellman-zorch`, groth16-zorch registered as the
+      8th library
 - [ ] Verify headline-stat conditions (device, workload, security bits) for the three numbers
 - [x] Playground hookup — done via the `#code` deep link (8a68bb8): the site
       URL-encodes each entry's `quickstart` into the fragment, so no per-library
