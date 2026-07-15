@@ -27,10 +27,17 @@ function readYamlDir<T>(dir: string): T[] {
     .filter((doc) => doc != null);
 }
 
+/** The Run button's snippet lives in snippets/<name>.py, not in the YAML —
+ *  code in a .py file, not indentation-sensitive YAML. Keyed by name (unique). */
+function readSnippet(name: string): string | undefined {
+  const file = path.join(ROOT, "snippets", `${name}.py`);
+  return fs.existsSync(file) ? fs.readFileSync(file, "utf8") : undefined;
+}
+
 export function getLibraries(): Library[] {
-  return readYamlDir<Library>("libraries").sort(
-    (a, b) => TYPE_ORDER[a.type] - TYPE_ORDER[b.type] || a.name.localeCompare(b.name)
-  );
+  return readYamlDir<Library>("libraries")
+    .map((lib) => ({ ...lib, quickstart: readSnippet(lib.name) }))
+    .sort((a, b) => TYPE_ORDER[a.type] - TYPE_ORDER[b.type] || a.name.localeCompare(b.name));
 }
 
 export function getLibrary(id: string): Library | undefined {
