@@ -5,6 +5,7 @@ export const SITE = {
   title: "zorch: take your ZK research to production, fast",
   description:
     "ZK provers you can actually read, at GPU speed, byte-identical to upstream. Browse the zorch libraries and try them.",
+  url: "https://awesome-zorch.fractalyze.io",
   org: "fractalyze",
   coreRepo: "https://github.com/fractalyze/zorch",
   dataRepo: "https://github.com/fractalyze/awesome-zorch",
