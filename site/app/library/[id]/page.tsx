@@ -7,7 +7,7 @@ import { SITE, playgroundUrl } from "@/lib/site";
 import { Markdown } from "@/components/markdown";
 import { CopyButton } from "@/components/copy-button";
 import { TypeBadge } from "@/components/type-badge";
-import { btnPrimary, btnGhost, Eyebrow } from "@/components/ui";
+import { btnPrimary, btnGhost, Eyebrow, StarIcon } from "@/components/ui";
 
 export const dynamicParams = false;
 
@@ -59,7 +59,10 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
           </h1>
           <TypeBadge type={lib.type} />
           {stars != null && stars > 0 && (
-            <span className="font-mono text-sm text-mute">★ {formatStars(stars)}</span>
+            <span className="inline-flex items-center gap-1 self-center rounded-full border border-edge bg-edge/40 px-2 py-0.5 font-mono text-xs text-ink">
+              <StarIcon className="size-3 text-[#e3b341]" />
+              {formatStars(stars)}
+            </span>
           )}
         </div>
         <p className="mt-3 max-w-3xl leading-relaxed text-mute">{lib.tagline}</p>
