@@ -26,7 +26,7 @@ export default async function Home() {
             JAX-native building blocks for Modern SNARKs (IOP + PCS).
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <a href={SITE.playground} className={btnPrimary}>
+            <a href={SITE.playground} target="_blank" rel="noopener" className={btnPrimary}>
               Try in Playground ↗
             </a>
             {core?.pypi && <CopyButton text={`pip install ${core.pypi}`} />}
