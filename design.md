@@ -205,11 +205,23 @@ the static site generator (§5–6) and the Pages deploy workflow.
 ## 8. Open items (owner: team)
 
 - [ ] Repos public by launch: zorch, sp1-zorch, groth16-zorch (bellman rename), flock-zorch
-- [ ] bellman-zorch → groth16-zorch rename executed (site links depend on it)
+- [ ] bellman-zorch → groth16-zorch rename **blocked by a name collision**
+      (found 2026-07-15): a separate repo `fractalyze/groth16-zorch` now exists
+      (Python Groth16 prover using Zorch, the RabbitSNARK counterpart) — it is a
+      different project from bellman-zorch (GPU prover for Rust bellman). Team
+      must decide: (a) catalog entry reverts to id `bellman-zorch` and the new
+      repo gets its own entry, (b) different rename target, or (c) merge. The
+      redirect assumption in `libraries/groth16-zorch.yaml` no longer holds.
 - [ ] Verify headline-stat conditions (device, workload, security bits) for the three numbers
-- [ ] Playground template hookup (`playground.fractalyze.ai/?template=<id>` — confirm param name)
-- [ ] Confirm PyPI package names (site currently assumes package == library id) and fill each
-      entry's `quickstart` snippet with real, runnable code
+- [x] Playground hookup — done via the `#code` deep link (8a68bb8): the site
+      URL-encodes each entry's `quickstart` into the fragment, so no per-library
+      template wiring is needed on the playground side
+- [ ] Publish PyPI packages and pick a core package name — checked 2026-07-15:
+      `zorch` on PyPI is an unrelated squatted package (a pytorch helper), and
+      none of the six `<lib>-zorch` names are published. The `pypi:` fields are
+      commented out in `libraries/*.yaml` (pip-install buttons hidden) until
+      real names exist; the squat is also an input to the naming round. Fill
+      each entry's `quickstart` with real, runnable code (zorch core has one)
 - [ ] Fill `schemes:` for the zorch core entry (what the building blocks actually cover) —
       seeded only for the three ports so far
 - [ ] Confirm per-library Argument coverage (v1 axis: ZeroCheck/Lookup techniques, e.g.
