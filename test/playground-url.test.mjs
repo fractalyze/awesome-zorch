@@ -36,13 +36,18 @@ test("quickstart round-trips through the fragment verbatim", () => {
 });
 
 test("every shipped snippet round-trips", () => {
-  const dir = path.join(REPO_ROOT, "snippets");
-  const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".py")) : [];
-  for (const f of files) {
-    const quickstart = fs.readFileSync(path.join(dir, f), "utf8");
-    const name = f.replace(/\.py$/, "");
+  // Snippets are co-located with their library: libraries/<id>/<id>.py.
+  const libRoot = path.join(REPO_ROOT, "libraries");
+  const files = fs
+    .readdirSync(libRoot, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => path.join(libRoot, d.name, `${d.name}.py`))
+    .filter((p) => fs.existsSync(p));
+  for (const file of files) {
+    const quickstart = fs.readFileSync(file, "utf8");
+    const name = path.basename(file, ".py");
     const got = decodeFragment(playgroundUrl({ id: name, quickstart })).get("code");
-    assert.equal(got, quickstart, `round-trip mismatch for snippets/${f}`);
+    assert.equal(got, quickstart, `round-trip mismatch for ${path.relative(REPO_ROOT, file)}`);
   }
   assert.ok(files.length >= 1, "expected at least one snippet");
 });

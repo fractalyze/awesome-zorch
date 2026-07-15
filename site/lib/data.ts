@@ -15,29 +15,35 @@ const TYPE_ORDER = Object.fromEntries(LIBRARY_TYPES.map((t, i) => [t, i])) as Re
   number
 >;
 
-function readYamlDir<T>(dir: string): T[] {
-  const abs = path.join(ROOT, dir);
+/** One folder per library: libraries/<id>/<id>.yaml, with the Run button's
+ *  snippet co-located as <id>.py — code in a .py file, not
+ *  indentation-sensitive YAML. */
+function readLibraries(): Library[] {
+  const abs = path.join(ROOT, "libraries");
   if (!fs.existsSync(abs)) return [];
   // The prebuild validator gates production builds, but `next dev` has no
-  // gate: skip files that parse to nothing instead of crashing the loader.
+  // gate: skip folders that parse to nothing instead of crashing the loader.
   return fs
-    .readdirSync(abs)
-    .filter((f) => f.endsWith(".yaml"))
-    .map((f) => load(fs.readFileSync(path.join(abs, f), "utf8")) as T)
-    .filter((doc) => doc != null);
-}
-
-/** The Run button's snippet lives in snippets/<name>.py, not in the YAML —
- *  code in a .py file, not indentation-sensitive YAML. Keyed by name (unique). */
-function readSnippet(name: string): string | undefined {
-  const file = path.join(ROOT, "snippets", `${name}.py`);
-  return fs.existsSync(file) ? fs.readFileSync(file, "utf8") : undefined;
+    .readdirSync(abs, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => {
+      const yaml = path.join(abs, d.name, `${d.name}.yaml`);
+      if (!fs.existsSync(yaml)) return null;
+      const lib = load(fs.readFileSync(yaml, "utf8")) as Library | null;
+      if (!lib) return null;
+      const snippet = path.join(abs, d.name, `${d.name}.py`);
+      // exactOptionalPropertyTypes: omit the key entirely when there's no snippet.
+      return fs.existsSync(snippet)
+        ? { ...lib, quickstart: fs.readFileSync(snippet, "utf8") }
+        : lib;
+    })
+    .filter((lib): lib is Library => lib != null);
 }
 
 export function getLibraries(): Library[] {
-  return readYamlDir<Library>("libraries")
-    .map((lib) => ({ ...lib, quickstart: readSnippet(lib.name) }))
-    .sort((a, b) => TYPE_ORDER[a.type] - TYPE_ORDER[b.type] || a.name.localeCompare(b.name));
+  return readLibraries().sort(
+    (a, b) => TYPE_ORDER[a.type] - TYPE_ORDER[b.type] || a.name.localeCompare(b.name),
+  );
 }
 
 export function getLibrary(id: string): Library | undefined {
