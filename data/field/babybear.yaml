@@ -1,7 +1,0 @@
-id: field/babybear
-name: BabyBear
-category: Field
-kind: Prime
-description: 31-bit prime.
-bits: 31
-smooth: true

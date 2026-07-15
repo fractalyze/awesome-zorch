@@ -1,7 +1,0 @@
-id: field/goldilocks
-name: Goldilocks
-category: Field
-kind: Prime
-description: 64-bit prime.
-bits: 64
-smooth: true

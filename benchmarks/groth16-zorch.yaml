@@ -1,0 +1,8 @@
+# Maintainer-only. Measurement conditions to be confirmed before launch (design.md §8).
+library: groth16-zorch
+stats:
+  - label: Groth16 prove
+    value: 2.2
+    unit: ×
+    baseline: vs Gnark's Groth16 GPU prover
+    featured: true

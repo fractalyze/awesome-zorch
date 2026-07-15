@@ -1,8 +1,0 @@
-id: hash/keccak
-name: Keccak-256
-category: Hash
-description: Bit-oriented sponge (SHA-3).
-field_requirement: FieldAgnostic
-arithmetization_friendly: false
-construction: Sponge
-github_stars: 180

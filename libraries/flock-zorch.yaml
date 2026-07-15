@@ -1,0 +1,16 @@
+id: flock-zorch
+name: flock-zorch
+type: snark
+tagline: >-
+  GPU port of Flock: R1CS-over-GF(2^128) PIOP (zerocheck + lincheck) with
+  BaseFold/Ligerito PCS, byte-identical to upstream across
+  Keccak / SHA-256 / BLAKE3.
+repo: https://github.com/fractalyze/flock-zorch
+upstream:
+  name: Flock
+  repo: https://github.com/succinctlabs/flock
+pypi: flock-zorch   # TODO(team): confirm published package name
+schemes: [flock]
+field: gf2^128
+pcs: [basefold, ligerito]
+arithmetization: r1cs

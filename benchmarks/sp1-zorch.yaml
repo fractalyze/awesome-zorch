@@ -1,0 +1,8 @@
+# Maintainer-only. Measurement conditions to be confirmed before launch (design.md §8).
+library: sp1-zorch
+stats:
+  - label: End-to-end prove
+    value: 1.6
+    unit: ×
+    baseline: vs SP1's hypercube prover (upstream)
+    featured: true

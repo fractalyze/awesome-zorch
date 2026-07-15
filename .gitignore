@@ -1,7 +1,5 @@
 node_modules/
-dist/
-# regenerated from data/ by scripts/build.mjs
-wireframe/data.js
 *.log
 .DS_Store
 request.md
+.vercel

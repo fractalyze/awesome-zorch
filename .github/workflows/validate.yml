@@ -12,14 +12,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
       - run: npm ci
       - name: Validate data against schema + reference integrity
         run: npm run validate
-      - name: Build site backdata (dist/data.json)
-        run: npm run build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: data-json
-          path: dist/data.json
+      - name: Validator unit tests
+        run: npm test
