@@ -6,7 +6,8 @@ rebuilds from `main`.
 
 ## Add a library
 
-Create `libraries/<id>.yaml`. The `id` must equal the filename.
+Create `libraries/<id>/<id>.yaml` (one folder per library). The `id` must
+equal the folder name.
 
 ```yaml
 id: my-zorch
@@ -37,10 +38,10 @@ npm install && npm run validate
 
 ## Runnable snippet (the Run button)
 
-The "Run in Playground" button loads a library's snippet from `snippets/<name>.py`
-(matching the library's `name`). Drop the file in — it's picked up automatically,
-no YAML field. Keep it to what actually runs on the playground; a library with no
-`snippets/<name>.py` just links to the bare playground.
+The "Run in Playground" button loads a library's snippet from the co-located
+`libraries/<id>/<id>.py`. Drop the file next to the yaml — it's picked up
+automatically, no YAML field. Keep it to what actually runs on the playground; a
+library without a snippet just links to the bare playground.
 
 ## Schemes vs. primitives
 

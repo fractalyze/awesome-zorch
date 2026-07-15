@@ -40,7 +40,7 @@ test("the actual repo root validates with zero errors", () => {
 
 test("a minimal valid fixture validates with zero errors", () => {
   const root = makeFixture({
-    "libraries/alpha.yaml": LIB_ALPHA,
+    "libraries/alpha/alpha.yaml": LIB_ALPHA,
     "benchmarks/alpha.yaml": `library: alpha
 stats:
   - label: Prove
@@ -51,19 +51,37 @@ stats:
   assert.equal(validate(root).length, 0);
 });
 
-test("id !== filename is reported", () => {
+test("id !== folder name is reported", () => {
   const root = makeFixture({
-    "libraries/beta.yaml": LIB_ALPHA, // id: alpha inside beta.yaml
+    "libraries/beta/beta.yaml": LIB_ALPHA, // id: alpha inside the beta folder
   });
   const errors = validate(root);
   assert.equal(errors.length, 1);
-  assert.ok(errors[0].includes('id "alpha" must equal the filename'));
+  assert.ok(errors[0].includes('id "alpha" must equal the folder name'));
   assert.ok(errors[0].includes("libraries/beta"));
+});
+
+test("a flat yaml directly under libraries/ is reported", () => {
+  const root = makeFixture({
+    "libraries/alpha.yaml": LIB_ALPHA, // pre-folder layout
+  });
+  const errors = validate(root);
+  assert.equal(errors.length, 1);
+  assert.ok(errors[0].includes("lives in its own folder"));
+});
+
+test("a folder without its yaml is reported", () => {
+  const root = makeFixture({
+    "libraries/alpha/alpha.py": "print('snippet without a yaml')\n",
+  });
+  const errors = validate(root);
+  assert.equal(errors.length, 1);
+  assert.ok(errors[0].includes("missing alpha.yaml"));
 });
 
 test("benchmark referencing an unknown library is reported", () => {
   const root = makeFixture({
-    "libraries/alpha.yaml": LIB_ALPHA,
+    "libraries/alpha/alpha.yaml": LIB_ALPHA,
     "benchmarks/ghost.yaml": `library: ghost
 stats:
   - label: Prove
@@ -77,7 +95,7 @@ stats:
 
 test("a stat with neither value/unit nor text is reported", () => {
   const root = makeFixture({
-    "libraries/alpha.yaml": LIB_ALPHA,
+    "libraries/alpha/alpha.yaml": LIB_ALPHA,
     "benchmarks/alpha.yaml": `library: alpha
 stats:
   - label: Prove
@@ -90,7 +108,7 @@ stats:
 
 test("a vocabulary violation (field: notafield) is reported", () => {
   const root = makeFixture({
-    "libraries/alpha.yaml": LIB_ALPHA + "field: notafield\n",
+    "libraries/alpha/alpha.yaml": LIB_ALPHA + "field: notafield\n",
   });
   const errors = validate(root);
   assert.ok(errors.length >= 1);
@@ -99,7 +117,7 @@ test("a vocabulary violation (field: notafield) is reported", () => {
 
 test("YAML parse errors are reported without throwing", () => {
   const root = makeFixture({
-    "libraries/alpha.yaml": "id: [unclosed\n  bad: : yaml",
+    "libraries/alpha/alpha.yaml": "id: [unclosed\n  bad: : yaml",
   });
   const errors = validate(root);
   assert.ok(errors.length >= 1);

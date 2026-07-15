@@ -54,7 +54,7 @@ maintainers on pinned hardware against upstream, never self-reported.
 
 ## How it works
 
-One YAML file per library under [`libraries/`](libraries/); maintainer-measured
+One folder per library under [`libraries/`](libraries/) (yaml + optional runnable snippet); maintainer-measured
 stats under [`benchmarks/`](benchmarks/). CI validates every entry against
 [`schema/`](schema/), and the [site](https://awesome-zorch.fractalyze.io)
 rebuilds from `main` on every merge.

@@ -9,7 +9,7 @@ authoritative) — read §8 for open items before starting launch work.
 All user-facing copy (taglines, descriptions, hero text, stats) comes verbatim
 from team-written sources: repo READMEs, `design.md`, or the Notion docs it
 cites. Never invent marketing lines, numbers, or claims. Attribute facts in
-`libraries/*.yaml` must be sourced from the library's own README.
+`libraries/<id>/<id>.yaml` must be sourced from the library's own README.
 
 ## Git
 

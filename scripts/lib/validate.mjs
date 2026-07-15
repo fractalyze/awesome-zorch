@@ -25,14 +25,24 @@ export function validateWithStats(rootDir) {
   const list = (dir) =>
     fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith(".yaml")).map((f) => path.join(dir, f)) : [];
 
+  // One folder per library: libraries/<id>/<id>.yaml, with the optional
+  // Run-button snippet co-located as <id>.py in the same folder.
   const libraries = {};
-  for (const file of list(path.join(ROOT, "libraries"))) {
-    const slug = path.basename(file, ".yaml");
+  const libRoot = path.join(ROOT, "libraries");
+  const dirents = fs.existsSync(libRoot) ? fs.readdirSync(libRoot, { withFileTypes: true }) : [];
+  for (const d of dirents) {
+    if (!d.isDirectory()) {
+      fail(`libraries/${d.name}: every library lives in its own folder (libraries/<id>/<id>.yaml)`);
+      continue;
+    }
+    const slug = d.name;
+    const file = path.join(libRoot, slug, `${slug}.yaml`);
+    if (!fs.existsSync(file)) { fail(`libraries/${slug}: missing ${slug}.yaml`); continue; }
     let e;
     try { e = loadYaml(file); } catch (err) { fail(`${file}: YAML parse error — ${err.message}`); continue; }
     if (!vLibrary(e)) vLibrary.errors.forEach((er) => fail(`libraries/${slug}: ${er.instancePath || "/"} ${er.message}`));
-    // id === filename (checked above) already implies id uniqueness: one dir, unique filenames.
-    if (e && e.id !== slug) fail(`libraries/${slug}: id "${e && e.id}" must equal the filename`);
+    // id === folder name already implies id uniqueness: one dir, unique folder names.
+    if (e && e.id !== slug) fail(`libraries/${slug}: id "${e && e.id}" must equal the folder name`);
     if (e) libraries[slug] = e;
   }
 

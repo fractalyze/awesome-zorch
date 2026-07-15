@@ -42,14 +42,15 @@ become entries only when they ship as their own repo (e.g. a future
 whir-zorch); until then they are attribute values, not entries.
 
 ```
-libraries/<id>.yaml      # the catalog (contributor-editable via PR)
+libraries/<id>/          # one folder per library (contributor-editable via PR)
+  <id>.yaml              #   the catalog entry
+  <id>.py                #   optional Run-button/Quickstart code (real .py,
+                         #   not indentation-sensitive YAML)
 benchmarks/<id>.yaml     # per-library measured stats (maintainer-only)
-snippets/<name>.py       # the library's Run-button/Quickstart code (real .py,
-                         # not indentation-sensitive YAML)
 schema/                  # JSON Schemas incl. controlled vocabularies
 ```
 
-### libraries/<id>.yaml
+### libraries/<id>/<id>.yaml
 
 ```yaml
 id: sp1-zorch                # must equal filename
@@ -105,7 +106,7 @@ stats:
 
 ### Registration flow
 
-1. **Add a library (anyone):** PR with one `libraries/<id>.yaml`. CI validates
+1. **Add a library (anyone):** PR with one `libraries/<id>/` folder. CI validates
    schema + vocab. Merge → card appears; README is pulled from the repo.
 2. **Numbers (maintainers only):** we run the (private, server-side) harness
    and commit `benchmarks/<id>.yaml`. Contributors who want numbers open an
@@ -154,7 +155,7 @@ Three page types, one generated static site:
      the left, a libraries/my-zorch.yaml example in a code window on the right,
      [Open the data repo] [Star] buttons.
 /library/<id>        Detail — main column: Quickstart code (full-width; it
-                     clipped in the sidebar) from snippets/<name>.py, then the
+                     clipped in the sidebar) from the co-located <id>.py, then the
                      README (build-time fetch) +
                      sidebar: stats panel · composition (field/hash/pcs) ·
                      upstream link · papers · license (pip copy + Run in
