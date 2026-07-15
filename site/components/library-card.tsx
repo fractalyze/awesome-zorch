@@ -5,6 +5,7 @@ import { formatStars } from "@/lib/github";
 import { playgroundUrl } from "@/lib/site";
 import { TypeBadge } from "@/components/type-badge";
 import { CopyButton } from "@/components/copy-button";
+import { StarIcon } from "@/components/ui";
 
 export function LibraryCard({
   lib,
@@ -30,7 +31,10 @@ export function LibraryCard({
         </Link>
         <TypeBadge type={lib.type} />
         {stars != null && stars > 0 && (
-          <span className="ml-auto font-mono text-xs text-mute">★ {formatStars(stars)}</span>
+          <span className="ml-auto inline-flex items-center gap-1 self-center rounded-full border border-edge bg-edge/40 px-2 py-0.5 font-mono text-xs text-ink">
+            <StarIcon className="size-3 text-[#e3b341]" />
+            {formatStars(stars)}
+          </span>
         )}
       </div>
       <p className="mt-2.5 text-sm leading-relaxed text-mute">{lib.tagline}</p>
@@ -40,8 +44,10 @@ export function LibraryCard({
           {stat.baseline && <span className="text-mute"> {stat.baseline}</span>}
         </p>
       )}
+      <div aria-hidden className="min-h-4 grow" />
+      {/* chips hug the footer so every card's tag row sits at the same height */}
       {chips(lib).length > 0 && (
-        <div className="relative z-10 mt-3 flex flex-wrap gap-1.5">
+        <div className="relative z-10 mb-3 flex flex-wrap gap-1.5">
           {chips(lib).map((c) =>
             onTagClick ? (
               <button
@@ -65,18 +71,21 @@ export function LibraryCard({
           )}
         </div>
       )}
-      <div aria-hidden className="min-h-4 grow" />
-      {/* footer bar flush with the card's bottom edge */}
-      <div className="relative z-10 -mx-5 -mb-5 flex flex-wrap items-center gap-2 border-t border-edge px-5 py-3">
+      {/* footer bar flush with the card's bottom edge; pip copy sits right */}
+      <div className="relative z-10 -mx-5 -mb-5 flex items-center gap-2 border-t border-edge px-5 py-3">
         <a
           href={playgroundUrl(lib)}
           target="_blank"
           rel="noopener"
-          className="inline-flex items-center rounded-md bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft"
+          className="inline-flex shrink-0 items-center whitespace-nowrap rounded-md bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft"
         >
           Run ↗
         </a>
-        {lib.pypi && <CopyButton text={`pip install ${lib.pypi}`} />}
+        {lib.pypi && (
+          <span className="ml-auto min-w-0">
+            <CopyButton text={`pip install ${lib.pypi}`} />
+          </span>
+        )}
       </div>
     </div>
   );

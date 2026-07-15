@@ -14,11 +14,11 @@ export function CopyButton({ text, label }: { text: string; label?: string }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
       }}
-      className="group/copy inline-flex items-center gap-2 rounded-md border border-edge bg-surface px-3 py-1.5 font-mono text-[13px] text-mute transition-colors hover:border-edge-strong hover:text-ink"
-      title="Copy to clipboard"
+      className="group/copy inline-flex min-w-0 max-w-full items-center gap-2 rounded-md border border-edge bg-surface px-3 py-1.5 font-mono text-[13px] text-mute transition-colors hover:border-edge-strong hover:text-ink"
+      title={text}
     >
       <span className="text-accent">$</span>
-      <span>{label ?? text}</span>
+      <span className="truncate">{label ?? text}</span>
       <span className={copied ? "text-accent" : "text-mute/70"} aria-hidden>
         {copied ? "✓" : "⧉"}
       </span>
