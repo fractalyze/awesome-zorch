@@ -9,8 +9,7 @@ repo: https://github.com/fractalyze/accumulation-zorch
 upstream:
   name: ark-accumulation
   repo: https://github.com/arkworks-rs/accumulation
-# TODO(team): not on PyPI yet (checked 2026-07-15) — restore `pypi:` on release.
-# pypi: accumulation-zorch
+pypi: accumulation-zorch   # TODO(team): not on PyPI yet (2026-07-15) — publish before launch
 schemes: [r1cs-nark-as, ipa-pc-as]
 field: pasta
 hash: poseidon

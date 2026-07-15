@@ -9,8 +9,7 @@ repo: https://github.com/fractalyze/flock-zorch
 upstream:
   name: Flock
   repo: https://github.com/succinctlabs/flock
-# TODO(team): not on PyPI yet (checked 2026-07-15) — restore `pypi:` on release.
-# pypi: flock-zorch
+pypi: flock-zorch   # TODO(team): not on PyPI yet (2026-07-15) — publish before launch
 schemes: [flock]
 field: gf2^128
 pcs: [basefold, ligerito]

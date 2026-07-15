@@ -5,9 +5,10 @@ tagline: >-
   JAX-native building blocks for Modern SNARKs (IOP + PCS).
   Proving-scheme- and zkVM-agnostic, fusion-first.
 repo: https://github.com/fractalyze/zorch
-# TODO(team): PyPI name "zorch" is taken by an unrelated package (checked
-# 2026-07-15) — pick a different package name (or claim via PEP 541), then
-# restore `pypi:`. The site hides the pip-install button while this is unset.
-# pypi: zorch
+# TODO(team): LAUNCH GATE — PyPI "zorch" is taken by an unrelated package
+# (checked 2026-07-15). Publish under a real name (or claim via PEP 541) and
+# update this field before launch: today this button installs someone else's
+# package.
+pypi: zorch
 # TODO(team): declare what the core ships (pcs/hash vocab). See design.md §8.
 # The Run button's snippet lives in snippets/zorch.py (loaded by name).
