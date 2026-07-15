@@ -8,8 +8,7 @@ repo: https://github.com/fractalyze/sp1-zorch
 upstream:
   name: SP1
   repo: https://github.com/succinctlabs/sp1
-# TODO(team): not on PyPI yet (checked 2026-07-15) — restore `pypi:` on release.
-# pypi: sp1-zorch
+pypi: sp1-zorch   # TODO(team): not on PyPI yet (2026-07-15) — publish before launch
 schemes: [sp1-hypercube]
 field: koalabear
 hash: poseidon2

@@ -8,8 +8,7 @@ repo: https://github.com/fractalyze/bellman-zorch
 upstream:
   name: bellman
   repo: https://github.com/zkcrypto/bellman
-# TODO(team): not on PyPI yet (checked 2026-07-15) — restore `pypi:` on release.
-# pypi: bellman-zorch
+pypi: bellman-zorch   # TODO(team): not on PyPI yet (2026-07-15) — publish before launch
 schemes: [groth16]
 field: bn254
 arithmetization: r1cs

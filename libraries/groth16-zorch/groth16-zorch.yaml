@@ -6,8 +6,7 @@ tagline: >-
   Input/output compatible with the circom/snarkjs ecosystem; also proves from
   gnark binary exports.
 repo: https://github.com/fractalyze/groth16-zorch
-# TODO(team): not on PyPI yet (checked 2026-07-15) — restore `pypi:` on release.
-# pypi: groth16-zorch
+pypi: groth16-zorch   # TODO(team): not on PyPI yet (2026-07-15) — publish before launch
 schemes: [groth16]
 field: bn254
 arithmetization: r1cs

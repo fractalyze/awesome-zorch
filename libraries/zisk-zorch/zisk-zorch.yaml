@@ -8,8 +8,7 @@ repo: https://github.com/fractalyze/zisk-zorch
 upstream:
   name: ZisK
   repo: https://github.com/0xPolygonHermez/zisk
-# TODO(team): not on PyPI yet (checked 2026-07-15) — restore `pypi:` on release.
-# pypi: zisk-zorch
+pypi: zisk-zorch   # TODO(team): not on PyPI yet (2026-07-15) — publish before launch
 schemes: [pil2-stark]
 field: goldilocks
 hash: poseidon2
