@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLibraries, getLibrary, getStats, formatStat } from "@/lib/data";
 import { COMPOSITION_AXES } from "@/lib/model";
-import { fetchReadme, fetchStars, formatStars } from "@/lib/github";
-import { SITE, playgroundUrl } from "@/lib/site";
+import { fetchReadme, fetchStars } from "@/lib/github";
+import { SITE } from "@/lib/site";
 import { Markdown } from "@/components/markdown";
-import { CopyButton } from "@/components/copy-button";
 import { TypeBadge } from "@/components/type-badge";
-import { btnPrimary, btnGhost, Eyebrow, StarIcon } from "@/components/ui";
+import { btnGhost, Eyebrow, StarPill, PipInstall, RunLink } from "@/components/ui";
 
 export const dynamicParams = false;
 
@@ -58,19 +57,12 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
             {lib.name}
           </h1>
           <TypeBadge type={lib.type} />
-          {stars != null && stars > 0 && (
-            <span className="inline-flex items-center gap-1 self-center rounded-full border border-edge bg-edge/40 px-2 py-0.5 font-mono text-xs text-ink">
-              <StarIcon className="size-3 text-[#e3b341]" />
-              {formatStars(stars)}
-            </span>
-          )}
+          <StarPill stars={stars} />
         </div>
         <p className="mt-3 max-w-3xl leading-relaxed text-mute">{lib.tagline}</p>
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <a href={playgroundUrl(lib)} target="_blank" rel="noopener" className={btnPrimary}>
-            Run in Playground ↗
-          </a>
-          {lib.pypi && <CopyButton text={`pip install ${lib.pypi}`} />}
+          <RunLink lib={lib} variant="detail-primary" />
+          {lib.pypi && <PipInstall pypi={lib.pypi} />}
           <a href={lib.repo} className={btnGhost}>
             GitHub ↗
           </a>
