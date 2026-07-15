@@ -7,7 +7,7 @@ import { SITE, playgroundUrl } from "@/lib/site";
 import { Markdown } from "@/components/markdown";
 import { CopyButton } from "@/components/copy-button";
 import { TypeBadge } from "@/components/type-badge";
-import { btnPrimary, btnGhost } from "@/components/ui";
+import { btnPrimary, btnGhost, Eyebrow } from "@/components/ui";
 
 export const dynamicParams = false;
 
@@ -72,8 +72,16 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
       </div>
 
       <div className="grid gap-12 pt-10 lg:grid-cols-[1fr_280px]">
-        {/* main: upstream README */}
+        {/* main: quickstart (full-width — it gets clipped in the sidebar), then README */}
         <article className="min-w-0">
+          {lib.quickstart && (
+            <section className="mb-10">
+              <Eyebrow>Quickstart</Eyebrow>
+              <div className="mt-3 [&_pre]:my-0">
+                <Markdown>{"```python\n" + lib.quickstart + "\n```"}</Markdown>
+              </div>
+            </section>
+          )}
           {readme ? (
             <Markdown>{readme}</Markdown>
           ) : (
@@ -98,13 +106,6 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
                   </li>
                 ))}
               </ul>
-            </Panel>
-          )}
-          {lib.quickstart && (
-            <Panel title="Quickstart">
-              <div className="text-xs [&_pre]:my-0">
-                <Markdown>{"```python\n" + lib.quickstart + "\n```"}</Markdown>
-              </div>
             </Panel>
           )}
           {composition.some(([, v]) => v) && (

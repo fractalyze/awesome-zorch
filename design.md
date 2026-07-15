@@ -44,6 +44,8 @@ whir-zorch); until then they are attribute values, not entries.
 ```
 libraries/<id>.yaml      # the catalog (contributor-editable via PR)
 benchmarks/<id>.yaml     # per-library measured stats (maintainer-only)
+snippets/<name>.py       # the library's Run-button/Quickstart code (real .py,
+                         # not indentation-sensitive YAML)
 schema/                  # JSON Schemas incl. controlled vocabularies
 ```
 
@@ -65,8 +67,6 @@ field: koalabear             # optional, controlled vocab
 hash: poseidon2              # optional, controlled vocab
 pcs: [basefold]              # optional, controlled vocab (array)
 arithmetization: air         # optional, controlled vocab
-quickstart: |                # optional; runnable snippet for the detail sidebar
-  import sp1_zorch
 papers:                      # optional
   - https://eprint.iacr.org/...
 license: Apache-2.0          # optional
@@ -153,11 +153,12 @@ Three page types, one generated static site:
      steps + policy notes (maintainer-measured numbers, README from repo) on
      the left, a libraries/my-zorch.yaml example in a code window on the right,
      [Open the data repo] [Star] buttons.
-/library/<id>        Detail — README main body (build-time fetch) +
-                     sidebar: "Use this library" panel (pip copy · quickstart
-                     snippet from the entry's `quickstart` field · Run in
-                     Playground) · stats panel · composition (field/hash/pcs) ·
-                     upstream link · papers · license
+/library/<id>        Detail — main column: Quickstart code (full-width; it
+                     clipped in the sidebar) from snippets/<name>.py, then the
+                     README (build-time fetch) +
+                     sidebar: stats panel · composition (field/hash/pcs) ·
+                     upstream link · papers · license (pip copy + Run in
+                     Playground live in the page header)
 
 Schemes: each library DECLARES the schemes it implements (`schemes: []`,
 lowercase kebab-case) — surfaced as the leading card chips and searchable in
