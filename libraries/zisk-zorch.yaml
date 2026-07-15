@@ -1,0 +1,16 @@
+id: zisk-zorch
+name: zisk-zorch
+type: zkvm
+tagline: >-
+  Lean ZisK prover on zorch blocks: pil2-stark Poseidon2-Goldilocks params,
+  transcript, and stage-1 trace commit byte-matched against pil2-proofman.
+repo: https://github.com/fractalyze/zisk-zorch
+upstream:
+  name: ZisK
+  repo: https://github.com/0xPolygonHermez/zisk
+pypi: zisk-zorch   # TODO(team): confirm published package name
+schemes: [pil2-stark]
+field: goldilocks
+hash: poseidon2
+pcs: [fri]
+arithmetization: air

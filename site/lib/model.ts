@@ -2,7 +2,7 @@
 // Keep this file free of node: imports — lib/data.ts holds the loaders.
 
 // Array order IS the catalog display/sort order; schema/library.schema.json holds the matching data-side enum.
-export const LIBRARY_TYPES = ["core", "zkvm", "snark", "pcs"] as const;
+export const LIBRARY_TYPES = ["core", "zkvm", "snark", "accumulation", "pcs"] as const;
 export type LibraryType = (typeof LIBRARY_TYPES)[number];
 
 export interface Library {
