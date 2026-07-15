@@ -2,10 +2,9 @@ import { getLibraries, featuredStat } from "@/lib/data";
 import { fetchStars } from "@/lib/github";
 import { SITE, HERO_SNIPPET } from "@/lib/site";
 import { CodeWindow } from "@/components/code-window";
-import { CopyButton } from "@/components/copy-button";
 import { HeroPlayground } from "@/components/hero-playground";
 import { Catalog } from "@/components/catalog";
-import { Eyebrow, StarIcon, btnPrimary, btnGhost } from "@/components/ui";
+import { Eyebrow, StarIcon, PipInstall, btnPrimary, btnGhost } from "@/components/ui";
 
 export default async function Home() {
   const libraries = getLibraries();
@@ -40,7 +39,7 @@ export default async function Home() {
           </p>
           {core?.pypi && (
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              <CopyButton text={`pip install ${core.pypi}`} />
+              <PipInstall pypi={core.pypi} />
             </div>
           )}
         </div>

@@ -61,11 +61,3 @@ export function featuredStat(id: string): Stat | undefined {
   const stats = getStats(id);
   return stats.find((s) => s.featured) ?? stats[0];
 }
-
-/** All featured stats across libraries, for the home Performance section. */
-export function allFeaturedStats(): { library: Library; stat: Stat }[] {
-  return getLibraries().flatMap((library) => {
-    const stat = featuredStat(library.id);
-    return stat ? [{ library, stat }] : [];
-  });
-}

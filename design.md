@@ -220,8 +220,9 @@ the static site generator (§5–6) and the Pages deploy workflow.
 - [ ] Publish PyPI packages and pick a core package name — checked 2026-07-15:
       `zorch` on PyPI is an unrelated squatted package (a pytorch helper), and
       none of the six `<lib>-zorch` names are published. The `pypi:` fields are
-      commented out in `libraries/*.yaml` (pip-install buttons hidden) until
-      real names exist; the squat is also an input to the naming round. Fill
+      live in `libraries/*.yaml` with `TODO(team)` launch-gate markers
+      (pip-install buttons render); publishing under those names before launch
+      is the gate. The squat is also an input to the naming round. Fill
       each entry's `quickstart` with real, runnable code (zorch core has one)
 - [ ] Fill `schemes:` for the zorch core entry (what the building blocks actually cover) —
       seeded only for the three ports so far
@@ -230,3 +231,9 @@ the static site generator (§5–6) and the Pages deploy workflow.
       Folding/Primitive axes wait for libraries that carry them
 - [ ] READMEs of the four repos are launch-quality (they render as the detail pages)
 - [ ] GitHub Pages enabled on this repo (public) + custom domain decision
+- [ ] Post-launch deepening, deliberately deferred (2026-07-16): (a) a single
+      catalog-reader module shared by `scripts/lib/validate.mjs` and
+      `site/lib/data.ts`, so the `libraries/<id>/<id>.yaml` + `<id>.py` layout
+      knowledge lives in one place and the site loader becomes testable;
+      (b) generate the README Libraries list from the yaml catalog — the
+      hand-written list has already drifted from the taglines

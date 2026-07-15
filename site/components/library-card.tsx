@@ -1,11 +1,8 @@
 import Link from "next/link";
 import type { Library, Stat } from "@/lib/model";
 import { chips, formatStat } from "@/lib/model";
-import { formatStars } from "@/lib/github";
-import { playgroundUrl } from "@/lib/site";
 import { TypeBadge } from "@/components/type-badge";
-import { CopyButton } from "@/components/copy-button";
-import { StarIcon } from "@/components/ui";
+import { StarPill, PipInstall, RunLink } from "@/components/ui";
 
 export function LibraryCard({
   lib,
@@ -30,12 +27,7 @@ export function LibraryCard({
           {lib.name}
         </Link>
         <TypeBadge type={lib.type} />
-        {stars != null && stars > 0 && (
-          <span className="ml-auto inline-flex items-center gap-1 self-center rounded-full border border-edge bg-edge/40 px-2 py-0.5 font-mono text-xs text-ink">
-            <StarIcon className="size-3 text-[#e3b341]" />
-            {formatStars(stars)}
-          </span>
-        )}
+        <StarPill stars={stars} className="ml-auto" />
       </div>
       <p className="mt-2.5 text-sm leading-relaxed text-mute">{lib.tagline}</p>
       {stat && (
@@ -73,17 +65,10 @@ export function LibraryCard({
       )}
       {/* footer bar flush with the card's bottom edge; pip copy sits right */}
       <div className="relative z-10 -mx-5 -mb-5 flex items-center gap-2 border-t border-edge px-5 py-3">
-        <a
-          href={playgroundUrl(lib)}
-          target="_blank"
-          rel="noopener"
-          className="inline-flex shrink-0 items-center whitespace-nowrap rounded-md bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft"
-        >
-          Run ↗
-        </a>
+        <RunLink lib={lib} variant="card-small" />
         {lib.pypi && (
           <span className="ml-auto min-w-0">
-            <CopyButton text={`pip install ${lib.pypi}`} />
+            <PipInstall pypi={lib.pypi} />
           </span>
         )}
       </div>
