@@ -52,7 +52,7 @@ schema/                  # JSON Schemas incl. controlled vocabularies
 ```yaml
 id: sp1-zorch                # must equal filename
 name: sp1-zorch
-type: zkvm                   # enum: core | zkvm | snark | pcs
+type: zkvm                   # enum: core | zkvm | snark | accumulation | pcs
 tagline: >-                  # one line, shown on card + detail header (no em-dashes)
   Lean SP1 prover on zorch blocks: byte-identical to upstream, GPU-fast.
 repo: https://github.com/fractalyze/sp1-zorch
@@ -73,9 +73,9 @@ license: Apache-2.0          # optional
 ```
 
 Controlled vocabularies (enforced by schema, extended by PR):
-`type` = core | zkvm | snark | pcs;
+`type` = core | zkvm | snark | accumulation | pcs;
 `field` = babybear | koalabear | goldilocks | m31 | bn254 | gf2^128 | pasta;
-`hash` = poseidon2 | keccak | blake3 | sha256 | monolith;
+`hash` = poseidon | poseidon2 | keccak | blake3 | sha256 | monolith;
 `pcs` = whir | fri | basefold | ligero | ligerito | kzg | ipa | hyperkzg;
 `arithmetization` = air | r1cs | plonkish | ccs.
 `schemes` is free kebab-case (protocol names), and must never contain
@@ -121,6 +121,9 @@ Entries, equal treatment in the grid (no flagship):
 | `sp1-zorch` | zkvm | **1.6× vs upstream SP1 hypercube prover** |
 | `groth16-zorch` | snark | **2.2× vs Gnark's Groth16 GPU prover** (repo = bellman-zorch, being renamed) |
 | `flock-zorch` | snark | **first working GPU implementation of Flock** |
+| `zisk-zorch` | zkvm | (added post-launch-scope) pil2-stark on Goldilocks, byte-matched vs pil2-proofman |
+| `openvm-zorch` | zkvm | (added) SWIRL on BabyBear, byte-matched vs openvm-stark-backend |
+| `accumulation-zorch` | accumulation | (added) ark-accumulation on Pasta, single fused GPU kernel |
 
 All repos go public at/before launch (README fetch + star counts depend on it).
 

@@ -8,7 +8,7 @@
   "properties": {
     "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "name": { "type": "string" },
-    "type": { "enum": ["core", "zkvm", "snark", "pcs"] },
+    "type": { "enum": ["core", "zkvm", "snark", "accumulation", "pcs"] },
     "tagline": { "type": "string", "maxLength": 300 },
     "repo": { "type": "string", "pattern": "^https://" },
     "upstream": {
@@ -32,7 +32,7 @@
       "description": "Minimal runnable Python snippet shown in the detail page's 'Use this library' panel — keep it to what actually works"
     },
     "field": { "enum": ["babybear", "koalabear", "goldilocks", "m31", "bn254", "gf2^128", "pasta"] },
-    "hash": { "enum": ["poseidon2", "keccak", "blake3", "sha256", "monolith"] },
+    "hash": { "enum": ["poseidon", "poseidon2", "keccak", "blake3", "sha256", "monolith"] },
     "arithmetization": { "enum": ["air", "r1cs", "plonkish", "ccs"] },
     "pcs": {
       "type": "array",

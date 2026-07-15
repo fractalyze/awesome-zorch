@@ -1,0 +1,16 @@
+id: accumulation-zorch
+name: accumulation-zorch
+type: accumulation
+tagline: >-
+  GPU accumulation prover over the Pasta cycle: the arkworks ark-accumulation
+  prove path (r1cs_nark_as + hp_as, ipa_pc_as) authored in Python/JAX and run
+  as a single fused GPU kernel, byte-identical to the reference prover.
+repo: https://github.com/fractalyze/accumulation-zorch
+upstream:
+  name: ark-accumulation
+  repo: https://github.com/arkworks-rs/accumulation
+pypi: accumulation-zorch   # TODO(team): confirm published package name
+schemes: [r1cs-nark-as, ipa-pc-as]
+field: pasta
+hash: poseidon
+arithmetization: r1cs

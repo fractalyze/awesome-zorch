@@ -5,6 +5,7 @@ const STYLES: Record<LibraryType, string> = {
   core: "text-lime-300/90",
   zkvm: "text-sky-300/90",
   snark: "text-amber-300/90",
+  accumulation: "text-rose-300/90",
   pcs: "text-fuchsia-300/90",
 };
 

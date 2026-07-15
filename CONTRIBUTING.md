@@ -11,7 +11,7 @@ Create `libraries/<id>.yaml`. The `id` must equal the filename.
 ```yaml
 id: my-zorch
 name: my-zorch
-type: zkvm                # core | zkvm | snark | pcs
+type: zkvm                # core | zkvm | snark | accumulation | pcs
 tagline: >-
   One line about what this is and why it matters.
 repo: https://github.com/you/my-zorch

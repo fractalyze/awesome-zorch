@@ -1,0 +1,17 @@
+id: openvm-zorch
+name: openvm-zorch
+type: zkvm
+tagline: >-
+  Lean OpenVM prover on zorch blocks: SWIRL (LogUp-GKR, batched ZeroCheck
+  with univariate skip, stacked opening reduction, WHIR PCS), byte-matched
+  against openvm-stark-backend.
+repo: https://github.com/fractalyze/openvm-zorch
+upstream:
+  name: OpenVM
+  repo: https://github.com/openvm-org/openvm
+pypi: openvm-zorch   # TODO(team): confirm published package name
+schemes: [swirl]
+field: babybear
+hash: poseidon2
+pcs: [whir]
+arithmetization: air
