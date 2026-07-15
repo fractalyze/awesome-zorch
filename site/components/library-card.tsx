@@ -69,7 +69,7 @@ export function LibraryCard({
       {/* footer bar flush with the card's bottom edge */}
       <div className="relative z-10 -mx-5 -mb-5 flex flex-wrap items-center gap-2 border-t border-edge px-5 py-3">
         <a
-          href={playgroundUrl(lib.id)}
+          href={playgroundUrl(lib)}
           className="inline-flex items-center rounded-md bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft"
         >
           Run ↗
