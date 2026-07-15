@@ -53,7 +53,10 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
       {/* header */}
       <div className="border-b border-edge pb-8">
         <div className="flex flex-wrap items-baseline gap-3">
-          <h1 className="font-mono text-[1.7rem] font-semibold tracking-tight">{lib.name}</h1>
+          {/* smaller below sm: the longest mono name (accumulation-zorch) overflows 320px at 1.7rem */}
+          <h1 className="font-mono text-2xl font-semibold tracking-tight sm:text-[1.7rem]">
+            {lib.name}
+          </h1>
           <TypeBadge type={lib.type} />
           {stars != null && stars > 0 && (
             <span className="font-mono text-sm text-mute">★ {formatStars(stars)}</span>

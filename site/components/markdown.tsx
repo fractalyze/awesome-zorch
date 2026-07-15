@@ -5,7 +5,7 @@ import rehypeHighlight from "rehype-highlight";
 // Tailwind typography (`prose`) styles the README HTML we don't control,
 // tuned to the site's tokens via modifier utilities.
 const PROSE =
-  "prose prose-invert max-w-none prose-sm sm:prose-base " +
+  "prose prose-invert max-w-none prose-sm sm:prose-base break-words " +
   "prose-headings:tracking-tight prose-h1:text-2xl prose-h2:text-xl " +
   "prose-h1:border-b prose-h1:border-edge prose-h1:pb-2 " +
   "prose-h2:border-b prose-h2:border-edge prose-h2:pb-1.5 " +
@@ -20,7 +20,19 @@ const PROSE =
 export function Markdown({ children }: { children: string }) {
   return (
     <div className={PROSE}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight]}
+        components={{
+          // README tables are wider than a phone viewport; without a scroll
+          // container they force the whole page to scroll horizontally.
+          table: (props) => (
+            <div className="overflow-x-auto">
+              <table {...props} />
+            </div>
+          ),
+        }}
+      >
         {children}
       </ReactMarkdown>
     </div>
