@@ -38,14 +38,46 @@ npm install && npm run validate
 
 ## Runnable snippet (the Run button)
 
-The "Run in Playground" button loads a library's snippet from the co-located
-`libraries/<id>/<id>.py`. Drop the file next to the yaml — it's picked up
-automatically, no YAML field. Keep it to what actually runs on the playground; a
-library without a snippet just links to the bare playground.
+A snippet is one Python file co-located with your entry:
+`libraries/<id>/<id>.py` — same name as the folder, picked up automatically,
+no YAML field. It powers every Run surface: the card's **Run ↗**, the detail
+page's **Quickstart** section and **Run in Playground** button. Without a
+snippet those Run buttons are hidden, so shipping one is what makes your
+entry try-able.
 
-Make it interactive: expose the snippet's inputs as editable constants at the
-top of the file (`LOG_N`, `A, B, C`, `A0, B0`) and derive everything below from
-them, so a reader can edit those and re-run to prove a different instance.
+How it travels: the site URL-encodes the file into the playground link's
+`#code` fragment. The code never touches a server — the playground opens with
+your snippet as its only tab and the visitor presses Run there.
+
+**It must run as-is on the playground box.** That box is a shared RTX 5090
+with an 8 GiB VRAM cap, a 60 s wall clock, sandboxed, running the
+playground's pinned zorch + jax stack. Concretely:
+
+- **Self-contained only** — no CLI args, no input files, no network. If your
+  library needs artifacts to prove (proving keys, witness files), it can't
+  have a snippet yet; the entry then links to the bare playground instead.
+- **Imports must exist in the pinned stack** (zorch, jax, zk_dtypes). Your
+  own package is NOT installed there — a snippet demonstrates the scheme on
+  zorch building blocks, not your PyPI package.
+- **Budget the 60 s for compile + run.** The first run JIT-compiles; size the
+  instance so compile plus prove finish comfortably inside the wall clock.
+- **Fit the VRAM cap** — stay well under 8 GiB at your default constants.
+
+Shape it like an instrument, not a listing:
+
+- Open with a comment block saying what the snippet demonstrates and why it
+  matters (this doubles as the Quickstart's introduction).
+- Expose the inputs as **editable constants at the top** (`LOG_N`, `A, B, C`)
+  and derive everything below from them, so a reader can edit and re-run to
+  prove a different instance. Say so in a comment, including safe ranges
+  (e.g. `LOG_N` 10..24).
+- End with `print` lines that prove success on their own — the verifier's
+  accept (`verifier accepts: True`) plus one line of instance scale (rounds,
+  sizes). The console is the payoff; make it legible.
+- Keep it under ~50 lines of code. It's a pitch, not a test suite.
+
+Before opening the PR, paste the file into the playground and press Run —
+"works on my machine" doesn't count; the button ships exactly this file.
 
 ## Schemes vs. primitives
 
