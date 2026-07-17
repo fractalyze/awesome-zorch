@@ -10,12 +10,12 @@
 # executing it into columns is the openvm SDK's job; openvm-zorch starts where
 # the trace does, which is where all five stages and every GPU win live.
 #
-# So the guest is the AIR itself -- openvm's Fibonacci, whose constraints and
-# trace this repo byte-matches against openvm-stark-backend v2.0.0. Two columns
-# (a, b), row i = (F_i, F_i+1); the public values are the input (a0, b0) and the
-# claimed F_n. The trace built below is byte-identical to that fixture's.
-#
-# Everything is plain openvm-zorch; change LOG_HEIGHT and re-run.
+# So the guest is the AIR itself -- openvm's Fibonacci. Two columns (a, b),
+# row i = (F_i, F_{i+1}); the public values are the seed (a0, b0) and the
+# claimed F_n. Change the seed A0, B0 or the height LOG_HEIGHT below and re-run
+# -- it proves whatever sequence you pick. The default (0, 1) over 64 rows is
+# byte-identical to openvm-stark-backend v2.0.0's fixture, whose constraints
+# and trace this repo byte-matches.
 import frx.numpy as fnp
 from zk_dtypes import babybear_mont as F
 
@@ -27,19 +27,23 @@ from openvm_zorch.transcript import new_transcript
 from openvm_zorch.verify import AirVk, verify
 from openvm_zorch.whir.prover import WhirConfig
 
-LOG_HEIGHT = 6  # 64 rows, so the claim is F_64
+A0, B0 = 0, 1   # the seed row (F_0, F_1)
+LOG_HEIGHT = 6  # 2^6 = 64 rows, so the claim is F_64
 
-# The witness: row i = (F_i, F_{i+1}), so each row's b is the next row's a. The
-# columns are BabyBear elements, so the add reduces mod the field on its own --
-# no explicit modulus.
-one = fnp.ones((), F)
-rows = [(fnp.zeros((), F), one)]
-for _ in range((1 << LOG_HEIGHT) - 1):
-    a_i, b_i = rows[-1]
-    rows.append((b_i, a_i + b_i))
-trace = fnp.array(rows, dtype=F)
-f_n = rows[-1][1]  # F_n as a field element
-public_values = (0, 1, int(f_n))  # a0, b0, the claimed F_n
+
+def fibonacci_trace(a0: int, b0: int, log_height: int):
+    """The witness: row i = (F_i, F_{i+1}) from the seed (a0, b0), plus the
+    final F_n as a field element. The columns are BabyBear, so each add reduces
+    mod the field on its own -- no explicit modulus."""
+    rows = [(fnp.full((), a0, F), fnp.full((), b0, F))]
+    for _ in range((1 << log_height) - 1):
+        a_i, b_i = rows[-1]
+        rows.append((b_i, a_i + b_i))
+    return fnp.array(rows, dtype=F), rows[-1][1]
+
+
+trace, f_n = fibonacci_trace(A0, B0, LOG_HEIGHT)
+public_values = (A0, B0, int(f_n))  # a0, b0, the claimed F_n
 
 # The AIR, as the symbolic node DAG keygen hands the prover: nodes in
 # topological order, and the indices of the nodes asserted to be zero.
@@ -171,7 +175,8 @@ def accepts(claim: tuple[int, int, int]) -> bool:
 # A wrong claim: F_n + 1 in the field, so it stays a valid element even when
 # F_n is P-1 (a plain int F_n + 1 would be P, which has no field element and
 # fails to construct).
-lied_about = public_values[:2] + (int(f_n + one),)
-print(f"proved F_{1 << LOG_HEIGHT} = {public_values[2]} over {1 << LOG_HEIGHT} rows")
+lied_about = public_values[:2] + (int(f_n + fnp.ones((), F)),)
+n = 1 << LOG_HEIGHT
+print(f"proved the ({A0}, {B0}) Fibonacci sequence: F_{n} = {public_values[2]} over {n} rows")
 print("verifier accepts the proof:      ", accepts(public_values))
 print("verifier accepts a wrong F_n:    ", accepts(lied_about))
