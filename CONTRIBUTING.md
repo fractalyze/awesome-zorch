@@ -43,6 +43,10 @@ The "Run in Playground" button loads a library's snippet from the co-located
 automatically, no YAML field. Keep it to what actually runs on the playground; a
 library without a snippet just links to the bare playground.
 
+Make it interactive: expose the snippet's inputs as editable constants at the
+top of the file (`LOG_N`, `A, B, C`, `A0, B0`) and derive everything below from
+them, so a reader can edit those and re-run to prove a different instance.
+
 ## Schemes vs. primitives
 
 - `schemes` lists the **end-to-end protocols** your library implements
