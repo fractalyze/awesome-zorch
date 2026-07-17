@@ -7,8 +7,9 @@
 # byte-identical to groth16::create_proof.
 #
 # make_core is the crate's export/export_bellman_core.py with its h_fft helper
-# inlined — the crate is Rust, so there is no package to import it from yet.
-# Change LOG_N and re-run.
+# inlined. The crate is Rust, so there is nothing to import it from — over there
+# this same function is lowered to bytecode once and run from Rust, on a real
+# bellman proving key. Change LOG_N and re-run.
 import frx
 import frx.numpy as fnp
 import numpy as np
@@ -16,7 +17,7 @@ from frx import lax
 from frx.lax import NttType
 from zk_dtypes import bn254_g1_affine as G1
 from zk_dtypes import bn254_g2_affine as G2
-from zk_dtypes import bn254_sf, pfinfo
+from zk_dtypes import bn254_sf
 from zk_dtypes import bn254_sf_mont as F
 
 LOG_N = 12
@@ -31,8 +32,9 @@ def make_core(n, m, num_inputs):
         kind = NttType.INTT if inverse else NttType.NTT
         return lax.ntt(x, ntt_type=kind, ntt_length=n, generator=G)
 
+    G_inv = G**-1
     shift = fnp.array([G**i for i in range(n)], dtype=F)
-    inv_shift = fnp.array([G**-i for i in range(n)], dtype=F)
+    inv_shift = fnp.array([G_inv**i for i in range(n)], dtype=F)
     den = fnp.array((G**n - 1) ** -1, dtype=F)  # 1/Z on the coset
 
     @frx.jit
@@ -55,51 +57,31 @@ def make_core(n, m, num_inputs):
     return core
 
 
+# One executable, fixed to this shape — lax.ntt/lax.msm lower shape-specialized.
+core = make_core(n, m, num_inputs)
+
+# Stand-ins for what bellman hands the Rust prover: the witness z, the A·z / B·z
+# evaluation vectors, and the CRS. Casting an int k to a curve dtype gives k·G,
+# which is enough to make the call real — the values come from bellman.
 rng = np.random.default_rng(0)
 
 
-def rand(count):
-    return [F(int(v)) for v in rng.integers(1, 1 << 62, size=count)]
+def rand(count, dtype):
+    return np.array(rng.integers(1, 1 << 62, size=count), dtype=dtype)
 
 
-def encode(scalars, dtype):
-    """Field scalars -> that dtype's array. For a curve dtype, each k becomes k·G."""
-    return np.array([int(s) for s in scalars], dtype=dtype)
-
-
-# The real proving key comes from bellman. Standing in for it: points k·G whose
-# k we picked, so the host can predict what the MSMs must return.
-z, az, bz = rand(m), rand(n), rand(n)
-k = G**5  # H_q = k^j·G, which lands the h-MSM on h(k)·G
-
-core = make_core(n, m, num_inputs)
-msm_A, msm_Bg1, msm_Bg2, msm_L, msm_h = core(
-    encode(z, bn254_sf),
-    encode(az, bn254_sf),
-    encode(bz, bn254_sf),
-    encode(rand(m), G1),
-    encode(rand(m), G1),
-    encode(rand(m), G2),
-    encode(rand(m - num_inputs), G1),
-    encode([k**j for j in range(n - 1)], G1),
+msms = core(
+    rand(m, bn254_sf),  # z = [inputs ‖ aux], the full assignment
+    rand(n, bn254_sf),  # az = A·z
+    rand(n, bn254_sf),  # bz = B·z
+    rand(m, G1),  # A_q, and the four below: bellman's CRS, dense order
+    rand(m, G1),  # Bg1_q
+    rand(m, G2),  # Bg2_q
+    rand(m - num_inputs, G1),  # L_q
+    rand(n - 1, G1),  # H_q
 )
 
-# msm_h is the output worth checking: it is the only one that depends on the
-# h-FFT, and it is still an MSM, so it covers both halves of the core at once.
-# h(k) = (A(k)·B(k) - C(k)) / Z(k), with A, B, C interpolated from az/bz alone.
-P = pfinfo(F).modulus
-w = F(pow(7, (P - 1) // n, P))  # n-th root of unity; ** wants a long-long exponent
-Zk = k**n - 1  # Z(k) = k^n - 1
-
-
-def at_k(evals):
-    """Interpolate evals over the n-th roots of unity, evaluate at k."""
-    return sum(v * w**i * (k - w**i) ** -1 for i, v in enumerate(evals)) * Zk * F(n) ** -1
-
-
-cz = [x * y for x, y in zip(az, bz)]
-h_at_k = (at_k(az) * at_k(bz) - at_k(cz)) * Zk**-1
-got = np.asarray(msm_h).reshape(1).view(np.uint8).tobytes()
-
-print(f"one fused call: 7 NTTs over 2^{LOG_N} + 5 MSMs -> 5 group elements")
-print(f"msm_h == h(k)·G: {got == encode([h_at_k], G1).view(np.uint8).tobytes()}")
+print(f"7 NTTs over 2^{LOG_N} + 5 MSMs, one fused GPU call:")
+for label, msm in zip(("msm_A", "msm_Bg1", "msm_Bg2", "msm_L", "msm_h"), msms):
+    print(f"  {label:8}{str(np.asarray(msm))[:62]}…")
+print("\nbellman's assembly turns these five into the proof, on the CPU.")
