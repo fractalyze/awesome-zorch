@@ -2,7 +2,7 @@
 #
 # openvm-zorch is OpenVM's prover rebuilt on zorch blocks. prove() composes
 # SWIRL's five stages over ONE Fiat-Shamir transcript -- a stacked commitment,
-# LogUp-GKR across the interaction buses, a batched ZeroCheck with univariate
+# LogUp-GKR over any interaction buses, a batched ZeroCheck with univariate
 # skip, a stacked opening reduction, and a WHIR opening -- and verify() is its
 # stage-for-stage dual. Both run below, on the AIR this file builds.
 #
@@ -19,7 +19,7 @@
 import frx.numpy as fnp
 from zk_dtypes import babybear_mont as F
 
-from openvm_zorch.logup_zerocheck.constraints import ConstraintsDag, Interaction
+from openvm_zorch.logup_zerocheck.constraints import ConstraintsDag
 from openvm_zorch.poly_common import VerificationError
 from openvm_zorch.poseidon2.babybear16 import babybear16_hasher
 from openvm_zorch.prove import AirInstance, SystemParams, prove
@@ -88,17 +88,13 @@ constraint_idx = (
     mul(last, sub(b, claimed)),           # and it ends at the claimed F_n
 )
 
-# LogUp's root sum must cancel, and openvm balances a bus across chips -- a
-# send in one, its receive in another. One AIR standing alone plays both sides,
-# which keeps the GKR stage carrying real traffic instead of running empty.
-neg_a = mul(node(kind="constant", value=P - 1), a)
-interactions = (
-    Interaction(bus_index=0, message=(b,), count=a, count_weight=0),
-    Interaction(bus_index=0, message=(b,), count=neg_a, count_weight=0),
-)
-
+# Fibonacci is a pure constraint AIR: no LogUp interactions, no bus. With
+# nothing to fold, the LogUp-GKR stage folds an empty input layer -- exactly
+# what the reference does for any AIR that declares no interactions -- so the
+# proof's weight rides the ZeroCheck over the five constraints above and the
+# WHIR opening that pins them to the committed trace.
 dag = ConstraintsDag(
-    nodes=tuple(nodes), constraint_idx=constraint_idx, interactions=interactions
+    nodes=tuple(nodes), constraint_idx=constraint_idx, interactions=()
 )
 
 # Production-shaped params, as the reference fixture pins them.
