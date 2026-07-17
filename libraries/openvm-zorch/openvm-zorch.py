@@ -1,0 +1,180 @@
+# Fibonacci through SWIRL: prove it, then check the proof.
+#
+# openvm-zorch is OpenVM's prover rebuilt on zorch blocks. prove() composes
+# SWIRL's five stages over ONE Fiat-Shamir transcript -- a stacked commitment,
+# LogUp-GKR across the interaction buses, a batched ZeroCheck with univariate
+# skip, a stacked opening reduction, and a WHIR opening -- and verify() is its
+# stage-for-stage dual. Both run below, on the AIR this file builds.
+#
+# A prover's input here is a TRACE, not an ELF. Compiling a guest program and
+# executing it into columns is the openvm SDK's job; openvm-zorch starts where
+# the trace does, which is where all five stages and every GPU win live.
+#
+# So the guest is the AIR itself -- openvm's Fibonacci, whose constraints and
+# trace this repo byte-matches against openvm-stark-backend v2.0.0. Two columns
+# (a, b), row i = (F_i, F_i+1); the public values are the input (a0, b0) and the
+# claimed F_n. The trace built below is byte-identical to that fixture's.
+#
+# Everything is plain openvm-zorch; change LOG_HEIGHT and re-run.
+import frx.numpy as fnp
+from zk_dtypes import babybear_mont as F
+
+from openvm_zorch.logup_zerocheck.constraints import ConstraintsDag, Interaction
+from openvm_zorch.poly_common import VerificationError
+from openvm_zorch.poseidon2.babybear16 import babybear16_params
+from openvm_zorch.prove import AirInstance, SystemParams, prove
+from openvm_zorch.transcript import new_transcript
+from openvm_zorch.verify import AirVk, verify
+from openvm_zorch.whir.prover import WhirConfig
+from zorch.hash.compression import Compression, CompressionParams
+from zorch.hash.poseidon2.poseidon2 import Poseidon2
+from zorch.hash.sponge import Sponge, SpongeParams
+
+LOG_HEIGHT = 6  # 64 rows, so the claim is F_64
+P = 2013265921  # BabyBear
+
+# The witness: row i = (F_i, F_i+1), so each row's b is the next row's a.
+rows = [(0, 1)]
+for _ in range((1 << LOG_HEIGHT) - 1):
+    a_i, b_i = rows[-1]
+    rows.append((b_i, (a_i + b_i) % P))
+trace = fnp.array(rows, dtype=F)
+public_values = (0, 1, rows[-1][1])  # a0, b0, the claimed F_n
+
+# The AIR, as the symbolic node DAG keygen hands the prover: nodes in
+# topological order, and the indices of the nodes asserted to be zero.
+nodes: list[dict] = []
+
+
+def node(**kw) -> int:
+    nodes.append(kw)
+    return len(nodes) - 1
+
+
+def main(index: int, offset: int) -> int:
+    """Column `index` of this row (offset 0) or the next one (offset 1)."""
+    return node(kind="variable", entry="main", part_index=0, index=index, offset=offset)
+
+
+def public(index: int) -> int:
+    return node(kind="variable", entry="public", part_index=None, index=index, offset=None)
+
+
+def add(left: int, right: int) -> int:
+    return node(kind="add", left=left, right=right)
+
+
+def sub(left: int, right: int) -> int:
+    return node(kind="sub", left=left, right=right)
+
+
+def mul(left: int, right: int) -> int:
+    return node(kind="mul", left=left, right=right)
+
+
+first, trans, last = (
+    node(kind="is_first_row"),
+    node(kind="is_transition"),
+    node(kind="is_last_row"),
+)
+a, b = main(0, 0), main(1, 0)
+a_next, b_next = main(0, 1), main(1, 1)
+a0, b0, claimed = public(0), public(1), public(2)
+
+# Each row asserts `selector * expr == 0`, which is what pins the trace to the
+# public values at both ends and to the recurrence in between.
+constraint_idx = (
+    mul(first, sub(a, a0)),               # the trace starts at the given input,
+    mul(first, sub(b, b0)),               # both columns
+    mul(trans, sub(b, a_next)),           # a' = b
+    mul(trans, sub(add(a, b), b_next)),   # b' = a + b
+    mul(last, sub(b, claimed)),           # and it ends at the claimed F_n
+)
+
+# LogUp's root sum must cancel, and openvm balances a bus across chips -- a
+# send in one, its receive in another. One AIR standing alone plays both sides,
+# which keeps the GKR stage carrying real traffic instead of running empty.
+neg_a = mul(node(kind="constant", value=P - 1), a)
+interactions = (
+    Interaction(bus_index=0, message=(b,), count=a, count_weight=0),
+    Interaction(bus_index=0, message=(b,), count=neg_a, count_weight=0),
+)
+
+dag = ConstraintsDag(
+    nodes=tuple(nodes), constraint_idx=constraint_idx, interactions=interactions
+)
+
+# Production-shaped params, as the reference fixture pins them.
+params = SystemParams(
+    l_skip=4,
+    n_stack=8,
+    log_blowup=1,
+    logup_pow_bits=2,
+    max_constraint_degree=3,
+    whir=WhirConfig(
+        k=4,
+        num_queries=[10, 3, 2],
+        mu_pow_bits=3,
+        folding_pow_bits=2,
+        query_phase_pow_bits=1,
+    ),
+)
+
+perm = Poseidon2(babybear16_params())
+sponge = Sponge(perm, SpongeParams(rate=8, out=8))
+comp = Compression(perm, CompressionParams(arity=2, chunk=8))
+vk_pre_hash = (0,) * 8
+
+_, proof = prove(
+    new_transcript(),
+    sponge,
+    comp,
+    params,
+    vk_pre_hash,
+    [
+        AirInstance(
+            trace=trace,
+            dag=dag,
+            public_values=public_values,
+            constraint_degree=2,
+            needs_next=True,
+            is_required=True,
+        )
+    ],
+)
+
+
+def accepts(claim) -> bool:
+    """Verify against a claim, from the AIR's shape alone -- no trace. The
+    public values are absorbed into the transcript before anything is sampled,
+    so a changed claim re-derives different challenges and the proof stops
+    answering the questions it was built for."""
+    vk = AirVk(
+        dag=dag,
+        log_height=LOG_HEIGHT,
+        width=2,
+        public_values=claim,
+        constraint_degree=2,
+        needs_next=True,
+        is_required=True,
+    )
+    try:
+        verify(
+            new_transcript(),
+            sponge,
+            comp,
+            params,
+            vk_pre_hash,
+            [vk],
+            proof.common_main_commit,
+            proof,
+        )
+        return True
+    except VerificationError:
+        return False
+
+
+lied_about = public_values[:2] + (public_values[2] + 1,)
+print(f"proved F_{1 << LOG_HEIGHT} = {public_values[2]} over {1 << LOG_HEIGHT} rows")
+print("verifier accepts the proof:      ", accepts(public_values))
+print("verifier accepts a wrong F_n:    ", accepts(lied_about))
