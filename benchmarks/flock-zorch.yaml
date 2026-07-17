@@ -1,7 +1,0 @@
-# Maintainer-only. Milestone stat — Flock had no GPU implementation before this.
-library: flock-zorch
-stats:
-  - label: Flock PIOP on GPU
-    text: First working GPU implementation
-    note: byte-identical to upstream across Keccak / SHA-256 / BLAKE3
-    featured: true

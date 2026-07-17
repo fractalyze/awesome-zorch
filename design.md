@@ -213,7 +213,12 @@ the static site generator (§5–6) and the Pages deploy workflow.
       bellman-zorch (GPU prover for Rust bellman). The catalog keeps both:
       entry id reverted to `bellman-zorch`, groth16-zorch registered as the
       8th library
-- [ ] Verify headline-stat conditions (device, workload, security bits) for the three numbers
+- [ ] Verify headline-stat conditions (device, workload, security bits) —
+      UNMEASURED as of 2026-07-16: the three benchmarks/*.yaml and the README's
+      numeric claims are PULLED until maintainers measure on pinned hardware;
+      the machinery (schema, validator, card/detail rendering, CONTRIBUTING
+      guide) stays, so re-adding a measured benchmarks/<id>.yaml re-lights the
+      stats
 - [x] Playground hookup — done via the `#code` deep link (8a68bb8): the site
       URL-encodes each entry's `quickstart` into the fragment, so no per-library
       template wiring is needed on the playground side
