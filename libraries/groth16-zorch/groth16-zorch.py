@@ -1,67 +1,68 @@
 # Groth16 — prove a circom circuit on the GPU, then verify the proof.
 #
 # groth16-zorch takes circom/snarkjs artifacts as they are: the proving key is
-# the same .zkey snarkjs proves with, the witness the same .wtns it feeds in,
-# and the proof serializes straight back to snarkjs-compatible JSON. Az/Bz are
-# evaluated in pure frx over the BN254 field dtype, so the R1CS mat-vec runs on
-# the GPU alongside the five MSMs — no native library involved.
+# the same .zkey snarkjs proves with, and the proof serializes straight back to
+# snarkjs-compatible JSON. Az/Bz are evaluated in pure frx over the BN254 field
+# dtype, so the R1CS mat-vec runs on the GPU alongside the five MSMs — no native
+# library involved.
 #
-# multiplier_3 is a 3-input multiplier: it proves knowledge of a, b, c behind
-# the public output 60 = 3 * 4 * 5. Key and witness are inlined at the bottom
-# so this runs as-is — swap in your own circuit's .zkey/.wtns, or pass
-# no_zk=True for the deterministic (r = s = 0) proof.
+# multiplier_3 proves knowledge of a, b, c behind the public product a*b*c.
+# Change A, B, C below and re-run: the witness — the six wires
+# [1, out, a, b, c, a*b] — is built straight from your inputs, so no witness
+# calculator or .wtns file is needed for this circuit. The .zkey is
+# trusted-setup output, so it stays inlined at the bottom. Pass no_zk=True for
+# the deterministic (r = s = 0) proof.
 import base64
 import gzip
 import pathlib
 import tempfile
 
 import numpy as np
-from zk_dtypes import bn254_sf_mont
+from zk_dtypes import bn254_sf, bn254_sf_mont
 
-from groth16_zorch.circom.wtns import parse_wtns
 from groth16_zorch.circom.zkey import parse_zkey
 from groth16_zorch.circom.zkey_to_terms import zkey_to_terms
 from groth16_zorch.groth16 import compile_circom, write_public_signals
 from groth16_zorch.groth16.verifier import VerificationKey, verify
 from groth16_zorch.r1cs import compute_abc
 
+A, B, C = 3, 4, 5  # the private inputs — edit and re-run
 
-TMPDIR = pathlib.Path(tempfile.mkdtemp())
 
-
-def unpack(blob, name):
-    path = TMPDIR / name
-    path.write_bytes(gzip.decompress(base64.b64decode(blob)))
-    return path
+def multiplier_3_witness(a, b, c):
+    """Wires for out === a*b*c: [1, out, a, b, c, inter=a*b]."""
+    wires = [1, a * b * c, a, b, c, a * b]
+    return np.array(wires, dtype=bn254_sf), wires
 
 
 def main():
-    zkey = parse_zkey(unpack(ZKEY_GZ, "multiplier_3.zkey"))
-    wtns = parse_wtns(unpack(WTNS_GZ, "multiplier_3.wtns"))
+    zkey_path = pathlib.Path(tempfile.mkdtemp()) / "multiplier_3.zkey"
+    zkey_path.write_bytes(gzip.decompress(base64.b64decode(ZKEY_GZ)))
+    zkey = parse_zkey(zkey_path)
+
+    witnesses, witness_ints = multiplier_3_witness(A, B, C)
 
     compiled = compile_circom(zkey)  # NTT twiddles + point arrays, once
     _, coefficients = zkey_to_terms(zkey)
     az, bz = compute_abc(  # R1CS mat-vec for Az/Bz, on the GPU
-        wtns.data._witnesses.view(np.dtype(bn254_sf_mont)),
+        witnesses.view(np.dtype(bn254_sf_mont)),
         compiled.terms,
         coefficients,
         compiled.domain_size,
     )
 
-    signals = write_public_signals(wtns.witnesses, compiled.config.num_public)
-    proof, public_signals = compiled.prove(
-        wtns.data._witnesses, az, bz, signals
-    )
+    signals = write_public_signals(witness_ints, compiled.config.num_public)
+    proof, public_signals = compiled.prove(witnesses, az, bz, signals)
 
     vk = VerificationKey.from_zkey(zkey)
     snarkjs = proof.to_json()
     print("verifier accepts:", verify(vk, proof, public_signals))
-    print("public output:", public_signals[0], "= 3 * 4 * 5")
+    print("public output:", public_signals[0], "=", A, "*", B, "*", C)
     print("proof:", snarkjs["protocol"], "over", snarkjs["curve"])
     print("pi_a.x:", snarkjs["pi_a"][0])
 
 
-# circom multiplier_3 fixture — the .zkey/.wtns snarkjs emits, gzip+base64.
+# circom multiplier_3 proving key — the .zkey snarkjs proves with, gzip+base64.
 ZKEY_GZ = """
 H4sIABl1WWoC/+1XZ1AT2BZOYAmhB4UIAUlCkdCRAEovITR5dJaO9AUpht5EqkFdEAQEQu8CCgiC
 dBQkyEpHKSoikS4qhABCaE9Gnee8P7sz+2Pnzbxv5sy9d+bcc0/75t4b7uUWBgQAAIxf5Xj8BfAN
@@ -108,9 +109,5 @@ fE7SzZ/hOafVAjCRw3CRua6oCSgBx877zsdG6C08X3ppICyN3TulH8LHYN7YtilXkBCgcuAQntHO
 9abGpTy2CkzNg3Tn3JEOJM2FwgJztQgYeinbJn2g+EYhgB7NTm8S+Nk07/XU08fEnnLxgtCp3dNu
 rxTOiDg250N5y5UevIeqTp2rw5v5RbbmogjrpGFUs5Ysq520YLWQEFd/PMJhUIDKaht21GfEX4rv
 T60bUbl3XEfocXtznA0IRGAu+wb6ezoHBV72Rxg6+bj9G29ZW7uKDgAA"""
-
-WTNS_GZ = """
-H4sIABl1WWoC/ysvyStmYmBgAGFGINZggAAFCP/D5K8PnScW7Kz0eGGsERvR2LjNNWCH5gLDh0V+
-KQZsUH0HoHoYGfADGwLyzATkWQjIsxKQ5yEgDwDQFQmzDAEAAA=="""
 
 main()
