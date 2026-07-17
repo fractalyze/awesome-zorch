@@ -4,7 +4,7 @@
 # a(x)·b(x)  — the whole 2^n-entry hypercube — while the verifier does only
 # O(n) work. Fiat-Shamir runs over a real poseidon2 (koalabear-16) transcript.
 # Everything here is plain zorch; change LOG_N (10..24) or the seeds and re-run.
-import jax.numpy as jnp
+import frx.numpy as fnp
 from zk_dtypes import koalabear_mont as F
 
 from zorch.hash.poseidon2.testing.koalabear16 import koalabear16_perm
@@ -23,13 +23,13 @@ def transcript():
 
 a = rand_field(1, (1 << LOG_N,), F)
 b = rand_field(2, (1 << LOG_N,), F)
-claimed = jnp.sum(a * b)
+claimed = fnp.sum(a * b)
 
-state = jnp.stack([a, b])
+state = fnp.stack([a, b])
 _, _, msgs = fold_rounds(
     prover.StandardRound(prover.ProductSummand(2)), state, transcript(), LOG_N
 )
-proof = jnp.stack(msgs)
+proof = fnp.stack(msgs)
 
 point, final_claim, _, ok = verify(
     verifier.SumcheckRound(2), claimed, proof, transcript()
