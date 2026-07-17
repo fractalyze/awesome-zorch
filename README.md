@@ -27,7 +27,7 @@ maintainers on pinned hardware against upstream, never self-reported.
 ### zkVM provers
 
 - [sp1-zorch](https://github.com/fractalyze/sp1-zorch) - Lean SP1 prover on
-  zorch blocks. 1.6x vs SP1's hypercube prover (upstream).
+  zorch blocks.
 - [zisk-zorch](https://github.com/fractalyze/zisk-zorch) - Lean ZisK prover:
   pil2-stark on Goldilocks, byte-matched against pil2-proofman.
 - [openvm-zorch](https://github.com/fractalyze/openvm-zorch) - Lean OpenVM
@@ -38,7 +38,6 @@ maintainers on pinned hardware against upstream, never self-reported.
 
 - [bellman-zorch](https://github.com/fractalyze/bellman-zorch) - GPU Groth16
   prover for bellman (BN254), byte-identical to groth16::create_proof.
-  2.2x vs Gnark's Groth16 GPU prover.
 - [groth16-zorch](https://github.com/fractalyze/groth16-zorch) - Groth16
   prover in Python using zorch, the Python counterpart of RabbitSNARK.
   Input/output compatible with the circom/snarkjs ecosystem.
