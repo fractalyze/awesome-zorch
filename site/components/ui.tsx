@@ -48,24 +48,29 @@ export function PipInstall({ pypi }: { pypi: string }) {
 }
 
 /** Run-in-playground link — owns the playgroundUrl + new-tab contract for both
- *  the card footer (small) and the detail header (primary) variants. */
+ *  the card footer (small) and the detail header (primary) variants. Renders
+ *  nothing without a snippet: a Run button into an empty playground is a
+ *  broken promise. */
 export function RunLink({
   lib,
   variant,
+  className,
 }: {
   lib: { id: string; quickstart?: string };
   variant: "card-small" | "detail-primary";
+  className?: string;
 }) {
+  if (!lib.quickstart) return null;
+  const base =
+    variant === "detail-primary"
+      ? btnPrimary
+      : "inline-flex shrink-0 items-center whitespace-nowrap rounded-md bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft";
   return (
     <a
       href={playgroundUrl(lib)}
       target="_blank"
       rel="noopener"
-      className={
-        variant === "detail-primary"
-          ? btnPrimary
-          : "inline-flex shrink-0 items-center whitespace-nowrap rounded-md bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft"
-      }
+      className={className ? `${base} ${className}` : base}
     >
       {variant === "detail-primary" ? "Run in Playground ↗" : "Run ↗"}
     </a>

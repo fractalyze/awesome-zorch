@@ -63,14 +63,15 @@ export function LibraryCard({
           )}
         </div>
       )}
-      {/* footer bar flush with the card's bottom edge; pip copy sits right */}
+      {/* footer bar flush with the card's bottom edge; pip copy leads, Run
+          sits right (and only exists when the library has a snippet) */}
       <div className="relative z-10 -mx-5 -mb-5 flex items-center gap-2 border-t border-edge px-5 py-3">
-        <RunLink lib={lib} variant="card-small" />
         {lib.pypi && (
-          <span className="ml-auto min-w-0">
+          <span className="min-w-0">
             <PipInstall pypi={lib.pypi} />
           </span>
         )}
+        <RunLink lib={lib} variant="card-small" className="ml-auto" />
       </div>
     </div>
   );
