@@ -16,6 +16,12 @@
 # -- it proves whatever sequence you pick. The default (0, 1) over 64 rows is
 # byte-identical to openvm-stark-backend v2.0.0's fixture, whose constraints
 # and trace this repo byte-matches.
+#
+# First-run note: prove() and verify() trace and compile the whole SWIRL
+# pipeline -- the five stages, the WHIR opening, and the poseidon2 permutations
+# unrolled into straight-line kernels -- before any GPU work runs. That trace is
+# a one-time cost the warm compile cache does not remove: it caches compiled
+# kernels, not the Python trace.
 import frx.numpy as fnp
 from zk_dtypes import babybear_mont as F
 
