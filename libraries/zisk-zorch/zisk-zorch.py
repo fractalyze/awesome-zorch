@@ -82,6 +82,12 @@ fri_pol = limbs.view(F3).reshape(1 << LOG_EXT)
 # a skeptic -- they are enough to watch every check fire and every forgery fail.
 # Raise it and the run gets slower and more honest.
 steps = [LOG_EXT - i * FOLD_BITS for i in range(N_LAYERS + 1)]
+# Editing the constants above can fold past the bottom of the domain, or below
+# the blowup, and the failure surfaces deep in the prover as a shape error.
+assert steps[-1] >= LOG_BLOWUP, (
+    f"FRI schedule {steps} folds below the blowup: the final polynomial would "
+    f"carry no degree bound. Lower FOLD_BITS or N_LAYERS, or raise LOG_N."
+)
 
 
 def prove_low_degree():
