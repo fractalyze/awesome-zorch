@@ -1,5 +1,7 @@
-// Build-time GitHub fetches. Everything degrades gracefully: while a repo is
-// still private (pre-launch) README/stars simply come back null.
+// GitHub fetches. Stars revalidate hourly via ISR (pages stay static-fast,
+// numbers stop freezing at deploy time); READMEs still snapshot at build.
+// Everything degrades gracefully: while a repo is still private (pre-launch)
+// README/stars simply come back null.
 
 function apiHeaders(accept: string): HeadersInit {
   const h: Record<string, string> = {
@@ -34,6 +36,10 @@ export async function fetchStars(repoUrl: string): Promise<number | null> {
   try {
     const res = await fetch(`https://api.github.com/repos/${slug}`, {
       headers: apiHeaders("application/vnd.github+json"),
+      // ISR: serve the cached count, refresh server-side at most hourly.
+      // (Client-side fetching was rejected: it leaks no token so it rides the
+      // anonymous 60 req/h/IP limit, and the count pops in after paint.)
+      next: { revalidate: 3600 },
     });
     if (!res.ok) return null;
     const json = (await res.json()) as { stargazers_count?: number };
