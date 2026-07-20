@@ -12,7 +12,6 @@
   --color-accent: #000000;
   --color-accent-soft: #333333;
   --font-sans: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Times New Roman", Times, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 

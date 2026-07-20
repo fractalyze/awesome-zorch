@@ -4,7 +4,7 @@ import { SITE, HERO_SNIPPET } from "@/lib/site";
 import { CodeWindow } from "@/components/code-window";
 import { HeroPlayground } from "@/components/hero-playground";
 import { Catalog } from "@/components/catalog";
-import { Eyebrow, StarIcon, PipInstall } from "@/components/ui";
+import { Eyebrow, PipInstall, StarIcon, btnGhost, btnPrimary } from "@/components/ui";
 
 export default async function Home() {
   const libraries = getLibraries();
@@ -29,25 +29,21 @@ export default async function Home() {
           "Try in Playground" button: the frame IS the playground). */}
       <section className={sectionPad}>
         <div className={container}>
-        {/* Figma hero grammar: giant serif headline left, small intro + CTA
-            right, then the full-bleed band below (our band is the playground). */}
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
-          <h1 className="max-w-3xl font-serif text-[clamp(2.75rem,6.5vw,5rem)] uppercase leading-[1.02] tracking-tight">
+        <div className="text-center">
+          <h1 className="mx-auto max-w-2xl text-[2.6rem] font-semibold leading-[1.08] tracking-[-0.02em]">
             Take your ZK research to production, fast.
           </h1>
-          <div className="max-w-xs shrink-0 lg:pb-3">
-            <p className="text-sm leading-relaxed text-mute">
-              {SITE.name} turns research ideas into production implementations:
-              JAX-native building blocks for Modern SNARKs (IOP + PCS).
-            </p>
-            {core?.pypi && (
-              <div className="mt-5">
-                <PipInstall pypi={core.pypi} />
-              </div>
-            )}
-          </div>
+          <p className="mx-auto mt-4 max-w-lg text-[17px] leading-relaxed text-mute">
+            {SITE.name} turns research ideas into production implementations:
+            JAX-native building blocks for Modern SNARKs (IOP + PCS).
+          </p>
+          {core?.pypi && (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <PipInstall pypi={core.pypi} />
+            </div>
+          )}
         </div>
-        <div className="mt-14 min-w-0 lg:mt-20">
+        <div className="mt-12 min-w-0 lg:mt-16">
           {/* The core library's real runnable snippet — Run executes it in the
               frame (playground embed). Falls back to the static API-shape
               sketch until the core snippet exists. */}
@@ -64,14 +60,11 @@ export default async function Home() {
           earns its place only when stats outgrow them (design.md §5) */}
       <section id="libraries" className={`scroll-mt-20 border-t border-edge ${sectionPad}`}>
         <div className={container}>
-        {/* Section grammar: centered pill chip, centered serif title, air. */}
-        <div className="text-center">
-          <div className="flex justify-center"><Eyebrow>Libraries</Eyebrow></div>
-          <h2 className="mt-6 font-serif text-[32px] leading-tight tracking-tight lg:text-[40px]">
-            Everything that runs on {SITE.name}
-          </h2>
-        </div>
-        <div className="mt-12 lg:mt-16">
+        <Eyebrow>Libraries</Eyebrow>
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+          Everything that runs on {SITE.name}
+        </h2>
+        <div className="mt-7">
           <Catalog
             items={ports.map((lib, i) => ({ lib, stat: featuredStat(lib.id), stars: stars[i] }))}
           />
@@ -81,33 +74,24 @@ export default async function Home() {
 
       {/* ③ Contribute (in-page, no subpage). Kept short: details live in the
           repo's CONTRIBUTING.md. */}
-      {/* Black band — buttons invert so they read on black. */}
-      <section id="contribute" className={`scroll-mt-20 bg-black text-center text-white ${sectionPad}`}>
+      <section id="contribute" className={`scroll-mt-20 border-t border-edge text-center ${sectionPad}`}>
         <div className={container}>
-        <div className="flex justify-center">
-          <Eyebrow className="border-white/30 text-white/70">Contribute</Eyebrow>
-        </div>
-        <h2 className="mx-auto mt-6 max-w-2xl font-serif text-[32px] leading-tight tracking-tight lg:text-[40px]">
-          The cryptography community building the <span className="text-white">future</span>.
+        <div className="flex justify-center"><Eyebrow>Contribute</Eyebrow></div>
+        <h2 className="mx-auto mt-3 max-w-2xl text-[1.9rem] font-semibold leading-tight tracking-[-0.015em]">
+          The cryptography community building the <span className="text-ink">future</span>.
         </h2>
-        <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-white/70">
+        <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-mute">
           The platform where the ZK community collaborates on schemes,
           implementations, and benchmarks.
         </p>
-        <p className="mx-auto mt-1.5 max-w-xl text-[14px] text-white/70">
+        <p className="mx-auto mt-1.5 max-w-xl text-[14px] text-mute">
           Register your library with one YAML file, reviewed by PR.
         </p>
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <a
-            href={`${SITE.dataRepo}/blob/main/CONTRIBUTING.md`}
-            className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-black transition-colors hover:bg-white/85"
-          >
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <a href={`${SITE.dataRepo}/blob/main/CONTRIBUTING.md`} className={btnPrimary}>
             Contribution guide ↗
           </a>
-          <a
-            href={SITE.coreRepo}
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/40 px-3.5 py-1.5 text-sm text-white transition-colors hover:border-white"
-          >
+          <a href={SITE.coreRepo} className={btnGhost}>
             <StarIcon className="size-4" /> Star on GitHub
           </a>
         </div>
