@@ -6,7 +6,7 @@ import { playgroundUrl } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
 
 export const btnPrimary =
-  "inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-accent-soft";
+  "inline-flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-1.5 text-sm font-medium text-black transition-colors hover:bg-accent-soft";
 
 export const btnGhost =
   "inline-flex items-center gap-1.5 rounded-full border border-edge bg-bg px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-edge-strong";
@@ -73,7 +73,7 @@ export function RunLink({
   const base =
     variant === "detail-primary"
       ? btnPrimary
-      : "inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-accent px-3 py-1 text-[13px] font-medium text-white transition-colors hover:bg-accent-soft";
+      : "inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft";
   return (
     <a
       href={playgroundUrl(lib)}

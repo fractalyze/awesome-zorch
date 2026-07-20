@@ -5,7 +5,7 @@ import rehypeHighlight from "rehype-highlight";
 // Tailwind typography (`prose`) styles the README HTML we don't control,
 // tuned to the site's tokens via modifier utilities.
 const PROSE =
-  "prose max-w-none prose-sm sm:prose-base break-words text-ink " +
+  "prose prose-invert max-w-none prose-sm sm:prose-base break-words text-ink " +
   "prose-headings:tracking-tight prose-headings:text-ink prose-h1:text-2xl prose-h2:text-xl " +
   "prose-h1:border-b prose-h1:border-edge prose-h1:pb-2 " +
   "prose-h2:border-b prose-h2:border-edge prose-h2:pb-1.5 " +
