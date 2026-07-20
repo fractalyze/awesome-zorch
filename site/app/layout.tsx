@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { SITE } from "@/lib/site";
 import { fetchStars } from "@/lib/github";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const jetbrains = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -32,7 +31,13 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const stars = await fetchStars(SITE.coreRepo);
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrains.variable} h-full antialiased`}>
+    <html lang="en" className={`${jetbrains.variable} h-full antialiased`}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <Nav coreStars={stars} />
         <main className="flex-1">{children}</main>

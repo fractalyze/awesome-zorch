@@ -1,19 +1,9 @@
 import type { LibraryType } from "@/lib/model";
 
-// Muted hue-coding: tinted text only, hairline border — no filled pills.
-const STYLES: Record<LibraryType, string> = {
-  core: "text-lime-300/90",
-  zkvm: "text-sky-300/90",
-  snark: "text-amber-300/90",
-  accumulation: "text-rose-300/90",
-  pcs: "text-fuchsia-300/90",
-};
-
+// One monochrome style for every type — the label alone carries the meaning.
 export function TypeBadge({ type }: { type: LibraryType }) {
   return (
-    <span
-      className={`rounded border border-edge bg-surface px-1.5 py-px font-mono text-[11px] leading-5 ${STYLES[type]}`}
-    >
+    <span className="rounded-full border border-edge px-2 font-mono text-[11px] leading-5 text-mute">
       {type}
     </span>
   );

@@ -52,7 +52,7 @@ export function Catalog({ items }: { items: CatalogItem[] }) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search…"
           aria-label="Search libraries"
-          className="w-full max-w-xs rounded-md border border-edge bg-surface px-3 py-1.5 font-mono text-[13px] placeholder:text-mute/70 focus:border-edge-strong focus:outline-none"
+          className="w-full max-w-xs rounded-full border border-edge bg-surface px-3 py-1.5 font-mono text-[13px] placeholder:text-mute focus:border-edge-strong focus:outline-none"
         />
         <div className="flex gap-1.5" role="group" aria-label="Filter by type">
           {LIBRARY_TYPES.map((t) => {
@@ -65,13 +65,13 @@ export function Catalog({ items }: { items: CatalogItem[] }) {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setType(active ? null : t)}
-                className={`rounded-md border px-2.5 py-1 font-mono text-xs transition-colors ${
+                className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                   active
-                    ? "border-accent/60 bg-accent/10 text-accent"
+                    ? "border-ink bg-ink text-white"
                     : "border-edge text-mute hover:border-edge-strong hover:text-ink"
                 }`}
               >
-                {t} <span className={active ? "text-accent/70" : "text-mute/60"}>{count}</span>
+                {t} <span className={active ? "text-white/70" : "text-mute"}>{count}</span>
               </button>
             );
           })}
@@ -94,10 +94,10 @@ export function Catalog({ items }: { items: CatalogItem[] }) {
       {/* Facet groups, one column per level, spanning the full width — click
           to filter the repos (the v1 schemes-browse intent, applied to the
           catalog). */}
-      <div className="grid gap-x-6 gap-y-4 rounded-lg border border-edge bg-surface/50 p-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-x-6 gap-y-4 rounded-2xl border border-edge bg-surface/50 p-4 sm:grid-cols-2 lg:grid-cols-4">
         {facetGroups.map(([label, values]) => (
           <div key={label} role="group" aria-label={`Filter by ${label}`}>
-            <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-mute/70">
+            <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-mute">
               {label}
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -109,9 +109,9 @@ export function Catalog({ items }: { items: CatalogItem[] }) {
                     type="button"
                     aria-pressed={active}
                     onClick={() => setTag(active ? null : t)}
-                    className={`rounded border px-2 py-0.5 font-mono text-[11px] leading-5 transition-colors ${
+                    className={`rounded-full border px-2 py-0.5 font-mono text-[11px] leading-5 transition-colors ${
                       active
-                        ? "border-accent/60 bg-accent/10 text-accent"
+                        ? "border-ink bg-ink text-white"
                         : "border-edge bg-surface text-mute hover:border-edge-strong hover:text-ink"
                     }`}
                   >

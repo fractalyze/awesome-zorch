@@ -17,7 +17,7 @@ export function HeroPlayground({ id, snippet }: { id: string; snippet: string })
     // Mobile height tracks the viewport (70svh keeps the whole instrument on
     // screen); desktop is a fixed 680px — a viewport clamp there kept
     // undershooting the design height on ordinary 1080p windows.
-    <div className="relative h-[min(640px,70svh)] w-full overflow-hidden rounded-lg border border-edge bg-bg lg:h-[680px]">
+    <div className="relative h-[min(640px,70svh)] w-full overflow-hidden rounded-2xl border border-edge bg-bg lg:h-[680px]">
       {!loaded && <PlaygroundSkeleton />}
       <iframe
         src={playgroundUrl({ id, quickstart: snippet })}
@@ -61,7 +61,7 @@ function PlaygroundSkeleton() {
         </div>
       </div>
       <div className="border-t border-edge px-5 py-3">
-        <div className="h-8 w-24 rounded-md bg-edge" />
+        <div className="h-8 w-24 rounded-full bg-edge" />
       </div>
     </div>
   );

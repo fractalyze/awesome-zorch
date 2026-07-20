@@ -1,32 +1,38 @@
 @import "tailwindcss";
-@import "highlight.js/styles/github-dark-dimmed.css";
+@import "highlight.js/styles/grayscale.css";
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-bg: #0a0a0b;
-  --color-surface: #111113;
-  --color-edge: #202024;
-  --color-edge-strong: #2e2e34;
-  --color-ink: #ededf0;
-  --color-mute: #8b8b93;
-  --color-accent: #a3e635; /* lime-400 — terminal green, deliberately not AI-purple */
-  --color-accent-soft: #bef264;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-bg: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-edge: #e0e0e0;
+  --color-edge-strong: #bbbbbb;
+  --color-ink: #000000;
+  --color-mute: #666666;
+  --color-accent: #000000;
+  --color-accent-soft: #333333;
+  --font-sans: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Times New Roman", Times, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
-  font-feature-settings: "cv11", "ss01";
+}
+
+/* grayscale.css paints .hljs white — let the surrounding surface (#f5f5f5
+   pre) show through instead. */
+.hljs {
+  background: transparent;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--color-ink) 12%, transparent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
 

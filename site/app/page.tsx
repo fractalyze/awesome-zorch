@@ -4,7 +4,7 @@ import { SITE, HERO_SNIPPET } from "@/lib/site";
 import { CodeWindow } from "@/components/code-window";
 import { HeroPlayground } from "@/components/hero-playground";
 import { Catalog } from "@/components/catalog";
-import { Eyebrow, StarIcon, PipInstall, btnPrimary, btnGhost } from "@/components/ui";
+import { Eyebrow, StarIcon, PipInstall } from "@/components/ui";
 
 export default async function Home() {
   const libraries = getLibraries();
@@ -30,8 +30,8 @@ export default async function Home() {
       <section className={sectionPad}>
         <div className={container}>
         <div className="text-center">
-          <h1 className="mx-auto max-w-2xl text-[2.6rem] font-semibold leading-[1.08] tracking-[-0.02em]">
-            Take your ZK research to production, <span className="text-accent">fast</span>.
+          <h1 className="mx-auto max-w-4xl font-serif text-[clamp(2.5rem,6vw,5rem)] uppercase leading-[1.05] tracking-tight">
+            Take your ZK research to production, fast.
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-[17px] leading-relaxed text-mute">
             {SITE.name} turns research ideas into production implementations:
@@ -61,7 +61,7 @@ export default async function Home() {
       <section id="libraries" className={`scroll-mt-20 border-t border-edge ${sectionPad}`}>
         <div className={container}>
         <Eyebrow>Libraries</Eyebrow>
-        <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+        <h2 className="mt-4 font-serif text-[32px] tracking-tight lg:text-[40px]">
           Everything that runs on {SITE.name}
         </h2>
         <div className="mt-7">
@@ -74,25 +74,32 @@ export default async function Home() {
 
       {/* ③ Contribute (in-page, no subpage). Kept short: details live in the
           repo's CONTRIBUTING.md. */}
-      <section id="contribute" className={`scroll-mt-20 border-t border-edge text-center ${sectionPad}`}>
+      {/* Black band — buttons invert so they read on black. */}
+      <section id="contribute" className={`scroll-mt-20 bg-black text-center text-white ${sectionPad}`}>
         <div className={container}>
-        <Eyebrow>Contribute</Eyebrow>
-        <h2 className="mx-auto mt-3 max-w-2xl text-[1.9rem] font-semibold leading-tight tracking-[-0.015em]">
-          The cryptography community building the <span className="text-accent">future</span>.
+        <Eyebrow className="border-white/30 text-white/70">Contribute</Eyebrow>
+        <h2 className="mx-auto mt-4 max-w-2xl font-serif text-[32px] leading-tight tracking-tight lg:text-[40px]">
+          The cryptography community building the <span className="text-white">future</span>.
         </h2>
-        <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-mute">
+        <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-white/70">
           The platform where the ZK community collaborates on schemes,
           implementations, and benchmarks.
         </p>
-        <p className="mx-auto mt-1.5 max-w-xl text-[14px] text-mute">
+        <p className="mx-auto mt-1.5 max-w-xl text-[14px] text-white/70">
           Register your library with one YAML file, reviewed by PR.
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
-          <a href={`${SITE.dataRepo}/blob/main/CONTRIBUTING.md`} className={btnPrimary}>
+          <a
+            href={`${SITE.dataRepo}/blob/main/CONTRIBUTING.md`}
+            className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-black transition-colors hover:bg-white/85"
+          >
             Contribution guide ↗
           </a>
-          <a href={SITE.coreRepo} className={btnGhost}>
-            <StarIcon className="size-4 text-[#e3b341]" /> Star on GitHub
+          <a
+            href={SITE.coreRepo}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/40 px-3.5 py-1.5 text-sm text-white transition-colors hover:border-white"
+          >
+            <StarIcon className="size-4" /> Star on GitHub
           </a>
         </div>
         </div>

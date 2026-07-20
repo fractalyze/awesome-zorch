@@ -185,6 +185,13 @@ template context exists — hero, cards, detail — not in the nav.)
 **Try buttons** link to `playground.fractalyze.ai` (per-library template TBD by
 that team; plain link until then).
 
+**Visual language (2026-07-20):** the site switched from the dark lime theme to
+the Fractalyze design system per the 2026-07-20 Figma file (Home(EN)_PC, node
+9:135): light monochrome ground (#FFFFFF / #F5F5F5, no chromatic color),
+Times New Roman display type (uppercase serif hero, serif section titles),
+Pretendard body, full-pill buttons/chips with 16px card radius, and prism
+photography as the only color in the system.
+
 ## 6. Tech & deploy
 
 - **Next.js (App Router) on Vercel**, app lives in `site/`. All pages
