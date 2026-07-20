@@ -8,8 +8,8 @@
   --color-edge-strong: #2e2e34;
   --color-ink: #ededf0;
   --color-mute: #8b8b93;
-  --color-accent: #ffffff;
-  --color-accent-soft: #d4d4d8;
+  --color-accent: #d0ceec;
+  --color-accent-soft: #e2e0f6;
   --font-sans: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
@@ -26,11 +26,11 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, #ffffff 22%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 

@@ -31,7 +31,7 @@ export default async function Home() {
         <div className={container}>
         <div className="text-center">
           <h1 className="mx-auto max-w-2xl text-[2.6rem] font-semibold leading-[1.08] tracking-[-0.02em]">
-            Take your ZK research to production, fast.
+            Take your ZK research to production, <span className="text-accent">fast</span>.
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-[17px] leading-relaxed text-mute">
             {SITE.name} turns research ideas into production implementations:

@@ -22,7 +22,7 @@ export function LibraryCard({
         {/* stretched link: the whole card navigates, action buttons sit above it */}
         <Link
           href={`/library/${lib.id}`}
-          className="font-mono text-[15px] font-semibold tracking-tight after:absolute after:inset-0"
+          className="font-mono text-[15px] font-semibold tracking-tight after:absolute after:inset-0 group-hover:text-accent"
         >
           {lib.name}
         </Link>
