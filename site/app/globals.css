@@ -2,12 +2,12 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-bg: #0a0a0b;
-  --color-surface: #111113;
-  --color-edge: #202024;
-  --color-edge-strong: #2e2e34;
+  --color-bg: #0b0a10;
+  --color-surface: #131218;
+  --color-edge: #232130;
+  --color-edge-strong: #332f45;
   --color-ink: #ededf0;
-  --color-mute: #8b8b93;
+  --color-mute: #8f8c9c;
   --color-accent: #d0ceec;
   --color-accent-soft: #e2e0f6;
   --font-sans: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;

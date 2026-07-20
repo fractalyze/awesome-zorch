@@ -27,11 +27,13 @@ export default async function Home() {
       {/* Two stacked bands: the words centered, then the playground full-width
           — the frame is the hero's centerpiece and gets the whole row (no
           "Try in Playground" button: the frame IS the playground). */}
-      <section className={sectionPad}>
-        <div className={container}>
+      <section className={`relative overflow-hidden ${sectionPad}`}>
+        {/* the BX lavender lives in the ground: a quiet wash, not a foreground color */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(60%_60%_at_50%_0%,rgba(208,206,236,0.10),transparent_70%)]" />
+        <div className={`relative ${container}`}>
         <div className="text-center">
           <h1 className="mx-auto max-w-2xl text-[2.6rem] font-semibold leading-[1.08] tracking-[-0.02em]">
-            Take your ZK research to production, <span className="text-accent">fast</span>.
+            Take your ZK research to production, <span className="text-ink">fast</span>.
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-[17px] leading-relaxed text-mute">
             {SITE.name} turns research ideas into production implementations:
@@ -74,8 +76,9 @@ export default async function Home() {
 
       {/* ③ Contribute (in-page, no subpage). Kept short: details live in the
           repo's CONTRIBUTING.md. */}
-      <section id="contribute" className={`scroll-mt-20 border-t border-edge text-center ${sectionPad}`}>
-        <div className={container}>
+      <section id="contribute" className={`relative scroll-mt-20 overflow-hidden border-t border-edge text-center ${sectionPad}`}>
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[420px] bg-[radial-gradient(55%_70%_at_50%_100%,rgba(208,206,236,0.08),transparent_70%)]" />
+        <div className={`relative ${container}`}>
         <div className="flex justify-center"><Eyebrow>Contribute</Eyebrow></div>
         <h2 className="mx-auto mt-3 max-w-2xl text-[1.9rem] font-semibold leading-tight tracking-[-0.015em]">
           The cryptography community building the <span className="text-ink">future</span>.
@@ -92,7 +95,7 @@ export default async function Home() {
             Contribution guide ↗
           </a>
           <a href={SITE.coreRepo} className={btnGhost}>
-            <StarIcon className="size-4" /> Star on GitHub
+            <StarIcon /> Star on GitHub
           </a>
         </div>
         </div>

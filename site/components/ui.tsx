@@ -30,7 +30,7 @@ export function Eyebrow({
 }
 
 /** GitHub's star (octicon star-fill), monochrome — inherits currentColor. */
-export function StarIcon({ className = "size-4" }: { className?: string }) {
+export function StarIcon({ className = "size-4 text-[#e3b341]" }: { className?: string }) {
   return (
     <svg aria-hidden viewBox="0 0 16 16" className={`${className} fill-current`}>
       <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" />
@@ -45,7 +45,7 @@ export function StarPill({ stars, className }: { stars: number | null; className
     <span
       className={`${className ? `${className} ` : ""}inline-flex items-center gap-1 self-center rounded-full border border-edge bg-edge/40 px-2 py-0.5 font-mono text-xs text-ink`}
     >
-      <StarIcon className="size-3" />
+      <StarIcon className="size-3 text-[#e3b341]" />
       {formatStars(stars)}
     </span>
   );

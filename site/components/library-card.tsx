@@ -22,7 +22,7 @@ export function LibraryCard({
         {/* stretched link: the whole card navigates, action buttons sit above it */}
         <Link
           href={`/library/${lib.id}`}
-          className="font-mono text-[15px] font-semibold tracking-tight after:absolute after:inset-0 group-hover:text-accent"
+          className="font-mono text-[15px] font-semibold tracking-tight after:absolute after:inset-0"
         >
           {lib.name}
         </Link>
@@ -32,7 +32,7 @@ export function LibraryCard({
       <p className="mt-2.5 text-sm leading-relaxed text-mute">{lib.tagline}</p>
       {stat && (
         <p className="mt-3 text-sm">
-          <span className="font-mono font-semibold text-accent">{formatStat(stat)}</span>
+          <span className="font-mono font-semibold text-ink">{formatStat(stat)}</span>
           {stat.baseline && <span className="text-mute"> {stat.baseline}</span>}
         </p>
       )}
