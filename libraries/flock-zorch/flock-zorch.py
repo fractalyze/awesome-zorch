@@ -1,7 +1,13 @@
-# flock proves a binary-field R1CS: a witness that satisfies the Hadamard gate
-# a ∘ b = c  (a_i · b_i = c_i on every row) over GF(2^128). The check is a
-# *zerocheck* — a sumcheck that  eq(r, x) · (a(x)·b(x) − c(x))  sums to zero over
-# the boolean hypercube, which happens iff the gate holds on every row. Below
+# flock proves a binary-field R1CS over GF(2^128). Its full prover runs four
+# stages over one Fiat-Shamir transcript: Ligerito commit+bind → zerocheck →
+# lincheck → batched Ligerito open (`prover.prove_fast`). This snippet runs the
+# *zerocheck* on its own — the R1CS Hadamard check  a ∘ b = c  (a_i · b_i = c_i on
+# every row) — because it is the one stage whose inputs are pure data (a, b, c, m);
+# the others need a Ligerito config schedule + statement digest that flock only
+# emits from its Rust reference, so they are not self-contained in Python.
+#
+# The zerocheck is a sumcheck that  eq(r, x) · (a(x)·b(x) − c(x))  sums to zero
+# over the boolean hypercube, which holds iff the gate holds on every row. Below
 # builds a satisfying witness (c = a AND b) and runs `zerocheck.prove_packed`, the
 # exact call flock-zorch byte-matches against upstream flock. Every field multiply
 # is a GF(2^128) carryless multiply on the GPU. Change M (>= 13) and re-run.
