@@ -2,7 +2,9 @@
 # blocks: `prove_shard_chain` runs SP1's four stages over one Fiat-Shamir
 # transcript — a stacked trace commitment, LogUp-GKR over the chips' lookup buses,
 # a ZeroCheck of the per-row AIR constraints, and a jagged-PCS opening — and
-# `verify_shard_chain` is its stage-for-stage dual. Both run below.
+# `verify_shard_chain` is its stage-for-stage dual, checking all four. Both run
+# below. (The machine-level public-values balance, which reconciles the lookup
+# buses ACROSS shards, is left to a full machine run — see the verify call.)
 #
 # A prover's input is a TRACE, not an ELF. So the guest is a tiny SP1-style chip
 # built in Python: two columns, column `a` pinned to 1 on every real row (the AIR
@@ -83,7 +85,11 @@ shared = dict(smcs=smcs, log_blowup=1, vk=vk, chip_metadata=metadata, gkr_chips=
 _, _, proof = prove_shard_chain(open_num_queries=2, **shared)(
     ShardBridge(main_region, None, public_values), cheap_transcript(F))
 
-# Verify: the dual chain replays every stage against the proof, ANDing each ok.
+# Verify: the dual chain replays every stage against the proof, ANDing each ok —
+# the trace commitment, the LogUp-GKR proof, the AIR constraints, and the PCS
+# opening. `verify_public_values=False`: the public-values/global-bus balance is a
+# machine-level leg that reconciles ACROSS shards, not a check on one standalone
+# shard (a lone shard's global sum is nonzero by design).
 dual = verify_shard_chain(
     chip_names=("alpha",), chip_shapes={"alpha": ChipShape(TraceShape(HEIGHT, WIDTH))},
     log_stacking_height=LOG_STACK, open_num_queries=2, verify_public_values=False, **shared)
@@ -98,5 +104,5 @@ def accepts(claimed_public_values):
 
 
 print(f"proved a {HEIGHT}-row SP1 shard (1 chip, 1 lookup interaction) over KoalaBear")
-print("verifier accepts:          ", accepts(public_values))
-print("verifier accepts wrong pv: ", accepts(rand(99, (8,))))  # different statement → reject
+print("verifier accepts the shard proof: ", accepts(public_values))
+print("... and rejects a wrong statement:", not accepts(rand(99, (8,))))
