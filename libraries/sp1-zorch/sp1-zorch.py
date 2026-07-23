@@ -78,11 +78,10 @@ shared = dict(smcs=smcs, log_blowup=1, vk=vk, chip_metadata=metadata, gkr_chips=
               chips=chips, num_betas=3, num_row_variables=MAX_LOG_ROWS - 1,
               max_log_row_count=MAX_LOG_ROWS)
 
-# Prove: run the four stages, collecting one message each — the proof.
-bridge, transcript, proof = ShardBridge(main_region, None, public_values), cheap_transcript(F), []
-for stage in prove_shard_chain(open_num_queries=2, **shared).rounds:
-    bridge, transcript, msg = stage(bridge, transcript)
-    proof.append(msg)
+# Prove: the ProveChain threads the bridge + transcript through its four stages
+# and returns their messages — the proof.
+_, _, proof = prove_shard_chain(open_num_queries=2, **shared)(
+    ShardBridge(main_region, None, public_values), cheap_transcript(F))
 
 # Verify: the dual chain replays every stage against the proof, ANDing each ok.
 dual = verify_shard_chain(
