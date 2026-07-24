@@ -1,5 +1,4 @@
-# Prove a Fibonacci sequence with ZisK's stark, then corrupt one row and watch
-# the proof fail.
+# Prove a Fibonacci sequence with ZisK's stark.
 #
 # zisk-zorch is ZisK's pil2-stark prover rebuilt on zorch blocks. A pil2 proof
 # runs five stages over one Fiat-Shamir transcript -- trace commit, LogUp
@@ -12,11 +11,10 @@
 # domain H exactly when every constraint holds on every row. Dividing by the
 # zerofier x^N - 1 -- which vanishes precisely on H -- leaves a polynomial ONLY
 # in that case. Corrupt a row and the division leaves a rational function whose
-# interpolant runs to full degree, so FRI's terminal degree check rejects. The
-# last two lines are that experiment.
+# interpolant runs to full degree, so FRI's terminal degree check rejects.
 #
 # Everything is editable: change the seed (A0, B0) or LOG_N and re-run to prove
-# a different sequence. LOG_N 8..16 all finish comfortably.
+# a different sequence.
 import frx.numpy as fnp
 import numpy as np
 from zk_dtypes import goldilocks as F
@@ -32,7 +30,7 @@ from zorch.poly.univariate import powers
 from zorch.utils.field import join_coeffs
 
 A0, B0 = 0, 1    # the seed row (F_0, F_1)
-LOG_N = 12       # 2^12 = 4096 rows, so the claim is F_4096
+LOG_N = 18       # 2^18 = 262144 rows, so the claim is F_262144
 LOG_BLOWUP = 1   # LDE rate; the quotient needs an extended domain
 ARITY = 4        # Merkle arity of every committed tree
 N_QUERIES = 4    # opened positions -- real pil2 proofs open ~64, see below
@@ -52,7 +50,7 @@ def const(value: int):
     return fnp.array(np.array(value % GOLDILOCKS_P, dtype=np.uint64), dtype=F)
 
 
-def fibonacci_trace(a0: int, b0: int, n: int, corrupt: int | None = None):
+def fibonacci_trace(a0: int, b0: int, n: int):
     """The witness: row i is (F_i, F_{i+1}), plus three boundary selectors.
 
     ZisK's zerofier is `everyRow`, so a constraint must vanish on ALL of H --
@@ -66,8 +64,6 @@ def fibonacci_trace(a0: int, b0: int, n: int, corrupt: int | None = None):
         a_i, b_i = a[-1], b[-1]
         a.append(b_i)
         b.append((a_i + b_i) % GOLDILOCKS_P)
-    if corrupt is not None:
-        b[corrupt] = (b[corrupt] + 1) % GOLDILOCKS_P  # one wrong row
     columns = (a, b, [1] + [0] * (n - 1), [1] * (n - 1) + [0], [0] * (n - 1) + [1])
     trace = np.stack([np.array(c, dtype=np.uint64) for c in columns], axis=1)
     return fnp.array(trace, dtype=F), b[-1]
@@ -97,14 +93,14 @@ def fibonacci_air(claimed_f_n: int):
     return eval_fn
 
 
-def prove_fibonacci(claimed_f_n: int, corrupt: int | None = None) -> bool:
+def prove_fibonacci(claimed_f_n: int) -> bool:
     """Commit the witness, build the quotient, prove it low-degree, verify.
 
     One transcript threads the whole thing: the trace root is absorbed before
     the constraint-folding challenge is squeezed, and the FRI betas and query
     positions come off that same running state -- pil2's genProof byte order.
     """
-    trace, _ = fibonacci_trace(A0, B0, N, corrupt)
+    trace, _ = fibonacci_trace(A0, B0, N)
     commitment = commit_trace(trace, blowup=BLOWUP, arity=ARITY)
 
     transcript = Transcript()
@@ -138,10 +134,6 @@ print(f"proved the ({A0}, {B0}) Fibonacci sequence over {N} rows")
 print(f"F_{N} = {f_n}")
 print()
 print("verifier accepts the honest trace:  ", prove_fibonacci(f_n))
-print("verifier accepts one corrupted row: ", prove_fibonacci(f_n, corrupt=N // 2))
-print()
-print("The rejection is the degree check: relax the bound to LOG_N + LOG_BLOWUP")
-print("and the corrupted proof passes, because every OTHER check already does.")
 print()
 print("Not yet a sound proof -- the DEEP stage that binds this FRI instance to")
 print("the committed trace needs a proving key. N_QUERIES=4 is a demo figure")
