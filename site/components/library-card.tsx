@@ -17,12 +17,12 @@ export function LibraryCard({
   onTagClick?: (tag: string) => void;
 }) {
   return (
-    <div className="group relative flex flex-col rounded-lg border border-edge bg-surface p-5 transition-colors hover:border-edge-strong">
+    <div className="group relative flex flex-col rounded-2xl border border-edge bg-surface p-5 transition-colors hover:border-edge-strong">
       <div className="flex items-baseline gap-2.5">
         {/* stretched link: the whole card navigates, action buttons sit above it */}
         <Link
           href={`/library/${lib.id}`}
-          className="font-mono text-[15px] font-semibold tracking-tight after:absolute after:inset-0 group-hover:text-accent"
+          className="font-mono text-[15px] font-semibold tracking-tight after:absolute after:inset-0"
         >
           {lib.name}
         </Link>
@@ -32,7 +32,7 @@ export function LibraryCard({
       <p className="mt-2.5 text-sm leading-relaxed text-mute">{lib.tagline}</p>
       {stat && (
         <p className="mt-3 text-sm">
-          <span className="font-mono font-semibold text-accent">{formatStat(stat)}</span>
+          <span className="font-mono font-semibold text-ink">{formatStat(stat)}</span>
           {stat.baseline && <span className="text-mute"> {stat.baseline}</span>}
         </p>
       )}
@@ -48,14 +48,14 @@ export function LibraryCard({
                 onClick={() => onTagClick(c)}
                 aria-label={`Filter libraries by ${c}`}
                 title={`Filter libraries by ${c}`}
-                className="rounded border border-edge-strong bg-edge px-2 py-0.5 font-mono text-[11px] leading-5 text-ink/85 transition-colors hover:border-accent hover:text-accent"
+                className="rounded-full border border-edge-strong bg-edge px-2 py-0.5 font-mono text-[11px] leading-5 text-ink/85 transition-colors hover:border-ink hover:text-ink"
               >
                 {c}
               </button>
             ) : (
               <span
                 key={c}
-                className="rounded bg-edge px-2 py-0.5 font-mono text-[11px] leading-5 text-ink/85"
+                className="rounded-full bg-edge px-2 py-0.5 font-mono text-[11px] leading-5 text-ink/85"
               >
                 {c}
               </span>

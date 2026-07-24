@@ -26,7 +26,7 @@ export async function generateMetadata({
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-t border-edge pt-4">
-      <h3 className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
+      <h3 className="inline-flex items-center rounded-full border border-edge px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
         {title}
       </h3>
       <div className="mt-3">{children}</div>
@@ -83,7 +83,7 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
           {readme ? (
             <Markdown>{readme}</Markdown>
           ) : (
-            <div className="rounded-lg border border-dashed border-edge-strong p-8 text-sm leading-relaxed text-mute">
+            <div className="rounded-2xl border border-dashed border-edge-strong p-8 text-sm leading-relaxed text-mute">
               README will appear here once the repository is public.
             </div>
           )}
@@ -124,7 +124,7 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
             <Panel title="Upstream">
               <a
                 href={lib.upstream.repo}
-                className="text-sm text-ink underline decoration-edge-strong underline-offset-4 hover:decoration-accent"
+                className="text-sm text-ink underline decoration-edge-strong underline-offset-4 hover:decoration-ink"
               >
                 {lib.upstream.name} ↗
               </a>
@@ -140,7 +140,7 @@ export default async function LibraryPage({ params }: { params: Promise<{ id: st
                   <li key={p}>
                     <a
                       href={p}
-                      className="break-all text-ink underline decoration-edge-strong underline-offset-4 hover:decoration-accent"
+                      className="break-all text-ink underline decoration-edge-strong underline-offset-4 hover:decoration-ink"
                     >
                       {p.replace(/^https:\/\//, "")} ↗
                     </a>

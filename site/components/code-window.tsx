@@ -11,7 +11,7 @@ export function CodeWindow({
   lang?: string;
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-edge bg-surface">
+    <div className="overflow-hidden rounded-2xl border border-edge bg-surface">
       <div className="flex items-center gap-2 border-b border-edge px-4 py-2.5">
         <span aria-hidden className="flex gap-1.5">
           <i className="size-2.5 rounded-full bg-edge-strong" />

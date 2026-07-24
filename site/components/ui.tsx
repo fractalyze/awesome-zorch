@@ -6,21 +6,30 @@ import { playgroundUrl } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
 
 export const btnPrimary =
-  "inline-flex items-center gap-1.5 rounded-md bg-accent px-3.5 py-1.5 text-sm font-medium text-black transition-colors hover:bg-accent-soft";
+  "inline-flex items-center gap-1.5 rounded-full bg-ink px-3.5 py-1.5 text-sm font-medium text-bg transition-colors hover:bg-ink/85";
 
 export const btnGhost =
-  "inline-flex items-center gap-1.5 rounded-md border border-edge px-3.5 py-1.5 text-sm text-mute transition-colors hover:border-edge-strong hover:text-ink";
+  "inline-flex items-center gap-1.5 rounded-full border border-edge bg-bg px-3.5 py-1.5 text-sm text-ink transition-colors hover:border-edge-strong";
 
-/** Uppercase mono section label — the site's structural voice. */
-export function Eyebrow({ children }: { children: React.ReactNode }) {
+/** Uppercase section-label chip — a small outlined pill. */
+export function Eyebrow({
+  children,
+  className = "border-edge text-mute",
+}: {
+  children: React.ReactNode;
+  /** Border/text colors only — lets the chip invert on dark bands. */
+  className?: string;
+}) {
   return (
-    <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-mute">
+    <p
+      className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] ${className}`}
+    >
       {children}
     </p>
   );
 }
 
-/** GitHub's star (octicon star-fill), in GitHub's star yellow by default. */
+/** GitHub's star (octicon star-fill), monochrome — inherits currentColor. */
 export function StarIcon({ className = "size-4 text-[#e3b341]" }: { className?: string }) {
   return (
     <svg aria-hidden viewBox="0 0 16 16" className={`${className} fill-current`}>
@@ -64,7 +73,7 @@ export function RunLink({
   const base =
     variant === "detail-primary"
       ? btnPrimary
-      : "inline-flex shrink-0 items-center whitespace-nowrap rounded-md bg-accent px-3 py-1 text-[13px] font-medium text-black transition-colors hover:bg-accent-soft";
+      : "inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-ink px-3 py-1 text-[13px] font-medium text-bg transition-colors hover:bg-ink/85";
   return (
     <a
       href={playgroundUrl(lib)}

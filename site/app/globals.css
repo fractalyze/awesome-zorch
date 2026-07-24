@@ -1,24 +1,28 @@
 @import "tailwindcss";
-@import "highlight.js/styles/github-dark-dimmed.css";
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-bg: #0a0a0b;
-  --color-surface: #111113;
-  --color-edge: #202024;
-  --color-edge-strong: #2e2e34;
+  --color-bg: #0b0a10;
+  --color-surface: #131218;
+  --color-edge: #232130;
+  --color-edge-strong: #332f45;
   --color-ink: #ededf0;
-  --color-mute: #8b8b93;
-  --color-accent: #a3e635; /* lime-400 — terminal green, deliberately not AI-purple */
-  --color-accent-soft: #bef264;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-mute: #8f8c9c;
+  --color-accent: #d0ceec;
+  --color-accent-soft: #e2e0f6;
+  --font-sans: "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-ink);
-  font-feature-settings: "cv11", "ss01";
+}
+
+/* grayscale.css paints .hljs white — let the surrounding surface (#f5f5f5
+   pre) show through instead. */
+.hljs {
+  background: transparent;
 }
 
 ::selection {
