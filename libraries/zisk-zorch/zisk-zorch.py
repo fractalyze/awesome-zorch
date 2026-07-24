@@ -20,16 +20,16 @@
 import frx.numpy as fnp
 import numpy as np
 from zk_dtypes import goldilocks as F
+from zk_dtypes import goldilocksx3 as F3
 
 from zisk_zorch.commit.trace_commit import commit_trace, extend
 from zisk_zorch.fri.prover import prove, prove_queries
 from zisk_zorch.fri.queries import sample_query_positions
-from zisk_zorch.fri.seam import _base_to_cubic
 from zisk_zorch.fri.verifier import verify
-from zisk_zorch.quotient.field_io import rotate
 from zisk_zorch.quotient.quotient import quotient_from_constraints
 from zisk_zorch.transcript.transcript import Transcript
 from zorch.poly.univariate import powers
+from zorch.utils.field import join_coeffs
 
 A0, B0 = 0, 1    # the seed row (F_0, F_1)
 LOG_N = 12       # 2^12 = 4096 rows, so the claim is F_4096
@@ -76,13 +76,13 @@ def fibonacci_trace(a0: int, b0: int, n: int, corrupt: int | None = None):
 def fibonacci_air(claimed_f_n: int):
     """The five constraints, each gated by a selector so it vanishes on all of H.
 
-    Next-row access is `rotate(col, BLOWUP)`: one row of H is a rotation by the
-    blowup factor once the trace sits on the extended domain.
+    Next-row access is `fnp.roll(col, -BLOWUP)`: one row of H is a rotation by
+    the blowup factor once the trace sits on the extended domain.
     """
 
     def eval_fn(trace):
         a, b, is_first, is_transition, is_last = (trace[:, i] for i in range(5))
-        a_next, b_next = rotate(a, BLOWUP), rotate(b, BLOWUP)
+        a_next, b_next = fnp.roll(a, -BLOWUP), fnp.roll(b, -BLOWUP)
         return fnp.stack(
             [
                 is_first * (a - const(A0)),            # starts at the given seed,
@@ -109,7 +109,7 @@ def prove_fibonacci(claimed_f_n: int, corrupt: int | None = None) -> bool:
 
     transcript = Transcript()
     transcript.put(commitment.root)
-    alpha = powers(_base_to_cubic(transcript.get_field()).reshape(()), 5)
+    alpha = powers(join_coeffs(transcript.get_field().reshape(-1, 3), F3).reshape(()), 5)
     quotient = quotient_from_constraints(
         fibonacci_air(claimed_f_n), extend(trace, BLOWUP), alpha, LOG_N, LOG_BLOWUP
     )
