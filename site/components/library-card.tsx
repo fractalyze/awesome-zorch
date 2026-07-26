@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Library, Stat } from "@/lib/model";
 import { chips, formatStat } from "@/lib/model";
 import { TypeBadge } from "@/components/type-badge";
-import { StarPill, PipInstall, RunLink } from "@/components/ui";
+import { StarPill, PipInstall, GitClone, RunLink } from "@/components/ui";
 
 export function LibraryCard({
   lib,
@@ -63,14 +63,13 @@ export function LibraryCard({
           )}
         </div>
       )}
-      {/* footer bar flush with the card's bottom edge; pip copy leads, Run
-          sits right (and only exists when the library has a snippet) */}
+      {/* footer bar flush with the card's bottom edge; the install copy button
+          leads (pip, or git clone when the library isn't on PyPI), Run sits
+          right (and only exists when the library has a snippet) */}
       <div className="relative z-10 -mx-5 -mb-5 flex items-center gap-2 border-t border-edge px-5 py-3">
-        {lib.pypi && (
-          <span className="min-w-0">
-            <PipInstall pypi={lib.pypi} />
-          </span>
-        )}
+        <span className="min-w-0">
+          {lib.pypi ? <PipInstall pypi={lib.pypi} /> : <GitClone repo={lib.repo} />}
+        </span>
         <RunLink lib={lib} variant="card-small" className="ml-auto" />
       </div>
     </div>

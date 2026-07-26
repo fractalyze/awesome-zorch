@@ -9,7 +9,7 @@ repo: https://github.com/fractalyze/openvm-zorch
 upstream:
   name: OpenVM
   repo: https://github.com/openvm-org/openvm
-pypi: openvm-zorch   # TODO(team): not on PyPI yet (2026-07-15) — publish before launch
+pypi: openvm-zorch
 schemes: [swirl]
 field: babybear
 hash: poseidon2
