@@ -47,6 +47,12 @@ export function PipInstall({ pypi }: { pypi: string }) {
   return <CopyButton text={`pip install ${pypi}`} />;
 }
 
+/** Card-footer fallback for libraries without a PyPI package: cloning the repo
+ *  is the real first install step (Rust crates built from source). */
+export function GitClone({ repo }: { repo: string }) {
+  return <CopyButton text={`git clone ${repo}`} />;
+}
+
 /** Run-in-playground link — owns the playgroundUrl + new-tab contract for both
  *  the card footer (small) and the detail header (primary) variants. Renders
  *  nothing without a snippet: a Run button into an empty playground is a
