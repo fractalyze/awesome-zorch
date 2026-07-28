@@ -1,15 +1,13 @@
 # An SP1 shard, proven and verified. sp1-zorch is SP1's prover rebuilt on zorch
-# blocks: `prove_shard_chain` runs SP1's four stages over one Fiat-Shamir
-# transcript — a stacked trace commitment, LogUp-GKR over the chips' lookup buses,
-# a ZeroCheck of the per-row AIR constraints, and a jagged-PCS opening — and
-# `verify_shard_chain` is its stage-for-stage dual, checking all four. Both run
-# below. (The machine-level public-values balance, which reconciles the lookup
-# buses ACROSS shards, is left to a full machine run — see the verify call.)
+# blocks: `ShardProver` runs SP1's four stages over one Fiat-Shamir transcript —
+# trace commitment, LogUp-GKR over the lookup buses, ZeroCheck of the per-row AIR
+# constraints, jagged-PCS opening — and `ShardVerifier` is its stage-for-stage
+# dual. The statement is a `ShardClaim` (vk, public values, chip row counts); the
+# trace is the `ShardWitness` it never names.
 #
-# A prover's input is a TRACE, not an ELF. So the guest is a tiny SP1-style chip
-# built in Python: two columns, column `a` pinned to 1 on every real row (the AIR
-# constraint (a-1)·(b-1) = 0), joined to the machine's lookup bus by one
-# `rw_constraints` Interaction — the send/receive argument SP1 uses in place of
+# A prover's input is a TRACE, not an ELF, so the guest is a tiny SP1-style chip:
+# two columns, `a` pinned to 1 on real rows (the AIR constraint (a-1)·(b-1) = 0),
+# on the lookup bus via one `rw_constraints` Interaction — SP1's stand-in for
 # cross-row constraints. Change HEIGHT or the seed and re-run.
 import frx.numpy as fnp
 import numpy as np
@@ -25,13 +23,15 @@ from zorch.testkit.transcript import cheap_transcript
 
 from sp1_zorch.logup_gkr.circuit import GkrChip
 from sp1_zorch.poseidon2.koalabear16 import koalabear16_params
-from sp1_zorch.shard_prover.prove_shard import (
-    ShardBridge,
-    preamble_chip_metadata,
-    prove_shard_chain,
+from sp1_zorch.shard_prover.prove_shard import ShardProver
+from sp1_zorch.shard_prover.verify_shard import ShardVerifier
+from sp1_zorch.types import (
+    ChipMetadata,
+    ChipWidths,
+    MachineVerifyingKey,
+    ShardClaim,
+    ShardWitness,
 )
-from sp1_zorch.shard_prover.types import ChipShape, MachineVerifyingKey, TraceShape
-from sp1_zorch.shard_prover.verify_shard import ShardVerifierBridge, verify_shard_chain
 
 HEIGHT, WIDTH = 4, 2       # a 4-row, 2-column chip
 MAX_LOG_ROWS = 5           # the machine's max chip height, 2^5
@@ -61,7 +61,6 @@ public_values = rand(30, (8,))
 vk = MachineVerifyingKey(
     preprocessed_commit=rand(31, (8,)), pc_start=rand(32, (3,)),
     cum_sum_x=rand(33, (7,)), cum_sum_y=rand(34, (7,)), enable_untrusted=0)
-metadata = preamble_chip_metadata(("alpha",), [HEIGHT], dtype=F)
 
 # One lookup interaction: send column 1 on the bus with multiplicity from column 0.
 gkr_chips = (
@@ -76,29 +75,32 @@ smcs = SingleMatrixCommitmentScheme(
     Compression(perm, CompressionParams(arity=2, chunk=8)))
 chips = {"alpha": WitnessChip()}
 
-shared = dict(smcs=smcs, log_blowup=1, vk=vk, chip_metadata=metadata, gkr_chips=gkr_chips,
-              chips=chips, num_betas=3, num_row_variables=MAX_LOG_ROWS - 1,
-              max_log_row_count=MAX_LOG_ROWS)
+# Row counts change shard to shard, so they ride the claim; column counts are
+# fixed by the AIR, so they configure the role.
+shared = dict(smcs=smcs, log_blowup=1, gkr_chips=gkr_chips, chips=chips, num_betas=3,
+              num_row_variables=MAX_LOG_ROWS - 1, max_log_row_count=MAX_LOG_ROWS)
+claim = ShardClaim(vk, public_values, ChipMetadata(("alpha",), (HEIGHT,)))
+witness = ShardWitness(main_region, None)
 
-# Prove: the ProveChain threads the bridge + transcript through its four stages
-# and returns their messages — the proof.
-_, _, proof = prove_shard_chain(open_num_queries=2, **shared)(
-    ShardBridge(main_region, None, public_values), cheap_transcript(F))
+# Each stage's reduced claim is the next stage's source claim; the four
+# reductions land on the trivial claim and their messages are the proof.
+proof = ShardProver(open_num_queries=2, **shared).prove(
+    claim, witness, cheap_transcript(F)).reduction_proof
 
-# Verify: the dual chain replays every stage against the proof, ANDing each ok —
-# the trace commitment, the LogUp-GKR proof, the AIR constraints, and the PCS
-# opening. `verify_public_values=False`: the public-values/global-bus balance is a
-# machine-level leg that reconciles ACROSS shards, not a check on one standalone
-# shard (a lone shard's global sum is nonzero by design).
-dual = verify_shard_chain(
-    chip_names=("alpha",), chip_shapes={"alpha": ChipShape(TraceShape(HEIGHT, WIDTH))},
-    log_stacking_height=LOG_STACK, open_num_queries=2, verify_public_values=False, **shared)
+# One dual per prover stage, in the prover's order, ANDing each ok.
+# `verify_public_values=False`: that leg balances the GKR cumulative sum against
+# the digest of a real 187-element SP1 public-values vector, which the 8 random
+# values above are not. Every real shard runs it.
+verifier = ShardVerifier(
+    chip_names=("alpha",), chip_widths={"alpha": ChipWidths(WIDTH)},
+    log_stacking_height=LOG_STACK, open_num_queries=2, verify_public_values=False,
+    **shared)
 
 
 def accepts(claimed_public_values):
     try:
-        _, _, ok = dual(ShardVerifierBridge(claimed_public_values), proof, cheap_transcript(F))
-        return bool(ok)
+        restated = ShardClaim(vk, claimed_public_values, claim.chip_metadata)
+        return bool(verifier.verify(restated, proof, cheap_transcript(F)).ok)
     except Exception:
         return False
 
