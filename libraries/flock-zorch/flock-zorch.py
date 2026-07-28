@@ -6,7 +6,7 @@
 # opening. Below builds an identity R1CS (A = B = C = I, so a = b = c = z) entirely
 # in Python — the witness packed by `pcs.pack`, no fixture — proves it, and
 # verifies it. Every field multiply is a GF(2^128) carryless multiply on the GPU.
-# Change M (>= 13) and re-run.
+# Change M (>= 14) and re-run.
 import numpy as np
 import frx
 
@@ -17,7 +17,9 @@ from flock_zorch.challenger import Challenger  # noqa: E402
 from flock_zorch.pcs.ligerito import commit_flock_ligerito  # noqa: E402
 from flock_zorch.pcs.pack import pack_witness, pack_z_lincheck_from_packed  # noqa: E402
 
-M, K_LOG, K_SKIP = 13, 8, 6  # 2^M R1CS rows; K_LOG = block size, K_SKIP = zerocheck skip
+# 2^M R1CS rows; K_LOG = block size, K_SKIP = zerocheck skip. The zerocheck
+# draws M - K_SKIP - 7 outer challenge coordinates and needs at least one.
+M, K_LOG, K_SKIP = 14, 8, 6
 DOMAIN = b"awesome-zorch-flock"  # Fiat-Shamir domain, shared by prover and verifier
 
 # The Ligerito recursive-open schedule: fold widths, code rate, query count, and
