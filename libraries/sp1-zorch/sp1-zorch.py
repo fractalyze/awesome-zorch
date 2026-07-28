@@ -9,6 +9,8 @@
 # two columns, `a` pinned to 1 on real rows (the AIR constraint (a-1)·(b-1) = 0),
 # on the lookup bus via one `rw_constraints` Interaction — SP1's stand-in for
 # cross-row constraints. Change HEIGHT or the seed and re-run.
+from typing import get_args
+
 import frx.numpy as fnp
 import numpy as np
 from rw_constraints import Interaction, VirtualPairCol
@@ -82,10 +84,13 @@ shared = dict(smcs=smcs, log_blowup=1, gkr_chips=gkr_chips, chips=chips, num_bet
 claim = ShardClaim(vk, public_values, ChipMetadata(("alpha",), (HEIGHT,)))
 witness = ShardWitness(main_region, None)
 
-# Each stage's reduced claim is the next stage's source claim; the four
-# reductions land on the trivial claim and their messages are the proof.
-proof = ShardProver(open_num_queries=2, **shared).prove(
-    claim, witness, cheap_transcript(F)).reduction_proof
+# Each stage's reduced claim is the next stage's source claim, and their
+# messages are the proof. The last stage is terminal — it reduces to the trivial
+# claim, the one that needs no proving — which is what makes a shard proof a
+# complete argument rather than one link in a chain.
+prover = ShardProver(open_num_queries=2, **shared)
+proved = prover.prove(claim, witness, cheap_transcript(F))
+proof = proved.reduction_proof
 
 # One dual per prover stage, in the prover's order, ANDing each ok.
 # `verify_public_values=False`: that leg balances the GKR cumulative sum against
@@ -97,14 +102,20 @@ verifier = ShardVerifier(
     **shared)
 
 
-def accepts(claimed_public_values):
-    try:
-        restated = ShardClaim(vk, claimed_public_values, claim.chip_metadata)
-        return bool(verifier.verify(restated, proof, cheap_transcript(F)).ok)
-    except Exception:
-        return False
+verified = verifier.verify(claim, proof, cheap_transcript(F))
+
+
+def seam(role):
+    """A role's source and reduced claim, read off the ProverStage parameters it
+    declares — so this prints the wiring rather than a restatement of it. The
+    composite re-wraps between stages: GKR's reduced claim rides inside the
+    zerocheck's, and the zerocheck's inside the opening's."""
+    source, _witness, reduced, *_ = get_args(type(role).__orig_bases__[0])
+    return f"{source.__name__} -> {reduced.__name__}"
 
 
 print(f"proved a {HEIGHT}-row SP1 shard (1 chip, 1 lookup interaction) over KoalaBear")
-print("verifier accepts the shard proof: ", accepts(public_values))
-print("... and rejects a wrong statement:", not accepts(rand(99, (8,))))
+for role in (prover.gkr, prover.zerocheck, prover.opening):
+    print(f"  {type(role).__name__:16} {seam(role)}")
+print(f"  verifier re-derives {type(verified.reduced_claim).__name__} from the proof alone")
+print("verifier accepts the shard proof:", bool(verified.ok))
